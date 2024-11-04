@@ -1,1 +1,98 @@
-<p>header works!</p>
+<div class="w-100 header d-flex justify-content-center m-0">
+  <nav class="w-100 navbar content navbar-expand-lg py-2">
+    <div class="container-fluid px-0 m-0">
+      <div
+        class="navbar-brand d-flex justify-content-start align-items-center gap-2 pt-0"
+      >
+        <a routerLink="main">
+          <div class="logo">
+            <img
+              src="assets/images/foodLogo.png"
+              alt="Logo"
+            />
+          </div>
+        </a>
+        <a routerLink="main">
+          <div class="pt-2">
+            <span class="py-0 m-0">Food.<b class="scd">Center</b></span>
+          </div>
+        </a>
+      </div>
+      <button
+        class="navbar-toggler custom-toggler pt-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fa-solid fa-bars navbar-toggler-icon"></i>
+      </button>
+      <div
+        class="collapse navbar-collapse d-flex justify-content-end"
+        id="navbarNavDropdown"
+      >
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item px-2">
+            <a
+              class="nav-link"
+              routerLink="main"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="router-link-active"
+              (click)="closeNavbar()"
+            >
+              Home
+            </a>
+          </li>
+          <li class="nav-item px-2">
+            <a
+              class="nav-link"
+              routerLink="about"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="router-link-active"
+              (click)="closeNavbar()"
+            >
+              Menu
+            </a>
+          </li>
+          <li class="nav-item icon px-2">
+            <a
+              class="nav-link"
+              routerLink="service"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="router-link-active"
+              (click)="closeNavbar()"
+            >
+            <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+          </li>
+          <!-- Language Dropdown -->
+          <li class="nav-item dropdown px-2">
+            <a
+              class="nav-link dropdown-toggle text-uppercase"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Az
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li>
+                <a class="dropdown-item" (click)="changeLanguage('az')">Az</a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="changeLanguage('en')">En</a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="changeLanguage('ru')">Ru</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

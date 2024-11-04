@@ -1,0 +1,243 @@
+@import "../../styles/variables.scss";
+
+$tl: 0.6s;
+.content {
+  padding: 0px 12vw;
+
+  @media only screen and (max-width: 1257px) {
+    padding: 0px 40px !important;
+  }
+
+  @media only screen and (max-width: 1180px) {
+    padding: 0px 20px !important;
+  }
+}
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+
+  /* Base styles for .navbar */
+  .navbar {
+    width: 100%;
+    background-color: white !important;
+    .navbar-nav .nav-item a {
+      color: black;
+      font-family: "Poppins", sans-serif !important;
+      font-size: 14px;
+      position: relative;
+      display: inline-block;
+      text-decoration: none;
+      overflow: hidden;
+      transition: color 0.3s ease;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 1px;
+        background-color: black;
+        transition: width 0.6s ease;
+      }
+
+      &:hover:not(&.router-link-active, &.icon, &.dropdown-toggle)::before {
+        width: 100%;
+      }
+    }
+    .icon i{
+        color: $main-color;
+        font-size: 18px;
+    }
+    .text-uppercase::first-letter {
+      text-transform: uppercase;
+    }
+
+    /* Remove hover effect from active links */
+    .router-link-active {
+      color: $main-color !important;
+      font-weight: bold;
+      border-bottom: 1px solid $main-color;
+
+      /* Remove hover effect */
+      &:hover {
+        color: $main-color;
+      }
+
+      &::before {
+        width: 100%;
+        background-color: $main-color;
+      }
+    }
+
+    .nav-item.dropdown .dropdown-menu .dropdown-item {
+      color: black !important;
+      cursor: pointer;
+      &::before {
+        content: none;
+      }
+
+      &:hover {
+        background-color: $main-color;
+        color: white !important;
+      }
+    }
+
+    .navbar-nav > li > .dropdown-menu a:active {
+      background-color: $main-color;
+      color: white;
+    }
+  }
+
+  & .navbar-brand {
+    a {
+      text-decoration: none;
+    }
+    .logo {
+      position: relative;
+      width: 55px;
+      height: 32px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    span {
+      font-family: "Poppins", sans-serif !important;
+      color: $title-color !important;
+      font-weight: bold;
+      font-size: 1.2rem;
+      letter-spacing: -0.8px;
+      text-align: center !important;
+      padding: 0px;
+    }
+  }
+
+  .router-link-active {
+    color: $main-color;
+    font-weight: bold;
+    border-bottom: 1px solid $main-color;
+  }
+}
+
+.white-logo {
+  opacity: 0;
+  position: absolute;
+  transition: opacity 300ms ease;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+b {
+  color: $main-color !important;
+}
+
+.custom-toggler {
+  border: none;
+  font-size: 20px !important;
+  color: $main-color !important;
+}
+
+.navbar-nav > li > .dropdown-menu .dropdown-item {
+  color: gray !important;
+}
+
+/* Hide the toggler button on larger screens */
+@media (min-width: 1200px) {
+  .navbar-expand-lg .navbar-toggler {
+    display: none;
+  }
+
+  .navbar-expand-lg .navbar-collapse {
+    display: flex !important;
+  }
+}
+
+@media only screen and (max-width: 1235px) {
+  .navbar-brand {
+    margin-right: 6px !important;
+  }
+}
+
+@media only screen and (max-width: 1060px) {
+  .content {
+    padding: 0px;
+  }
+
+  .header {
+    padding: 0 !important;
+    justify-content: start;
+    overflow-y: auto !important;
+
+    .navbar {
+      width: 100%;
+      overflow-y: auto !important;
+      .navbar-nav {
+        display: block !important;
+        width: 100%;
+        .nav-item a {
+          &::before {
+            background-color: white !important;
+          }
+        }
+      }
+    }
+
+    .collapse {
+      padding-top: 20px;
+    }
+
+    .navbar-toggler .custom-toggler {
+      display: block !important;
+    }
+    .navbar-expand-lg {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 10px;
+    }
+
+    .navbar-expand-lg .navbar-toggler {
+      display: block;
+    }
+
+    .navbar-expand-lg .navbar-collapse {
+      display: none !important;
+      flex-basis: 100%;
+      flex-grow: 1;
+      align-items: center;
+    }
+
+    .navbar-expand-lg .navbar-collapse.collapse.show {
+      display: flex !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .header {
+    padding: 0 !important;
+    justify-content: start;
+    overflow-y: auto !important;
+
+    .navbar {
+      width: 100%;
+      overflow-y: auto !important;
+    }
+
+    .collapse {
+      padding-top: 20px;
+    }
+
+    .navbar-nav .nav-item a {
+      color: black !important; 
+    }
+
+  }
+}

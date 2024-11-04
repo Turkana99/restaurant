@@ -1,0 +1,31 @@
+@import "../../styles/variables.scss";
+
+footer {
+  background-color: #121921;
+  color: white;
+  font-family: "Poppins", sans-serif !important;
+  .line {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .nav-item {
+    a {
+      color: white;
+      font-size: 14px;
+      &:hover:not(&.all-nav) {
+        color: $main-color;
+        transition: color 200ms;
+      }
+    }
+    .all-nav {
+      .nav-link  .nav-item{
+        color: white;
+      }
+    }
+  }
+  .copyright {
+    font-size: 14px;
+    span {
+      color: $main-color !important;
+    }
+  }
+}
