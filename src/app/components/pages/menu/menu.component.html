@@ -1,0 +1,132 @@
+<div class="full_menu h-100 m-0">
+  <div
+    class="menu-option content row py-3 d-flex justify-content-between align-items-center m-0"
+  >
+    <div class="col-lg-8 m-0 d-flex align-items-center">
+      <p class="p-0 m-0">Order your favorite foods</p>
+    </div>
+    <div class="col-lg-4 d-flex justify-content-end">
+      <button class="menu_btn me-2"><a href="">Menu</a></button>
+      <button class="banket_btn"><a href="">Banket menu</a></button>
+    </div>
+  </div>
+
+  <div class="row menu content m-0 mb-5">
+    <div class="col-lg-8 p-0 m-0">
+      <div class="pt-4 pb-4">
+        <p-inputGroup>
+          <input type="text" pInputText placeholder="Search" />
+          <button
+            type="button"
+            pButton
+            icon="pi pi-search"
+            class="p-button-warning"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </p-inputGroup>
+      </div>
+
+      <p-tabView
+        class="p-0 m-0"
+        (activeIndexChange)="onCategoryChange(categories[$event])"
+      >
+        <ng-container *ngFor="let category of categories; let i = index">
+          <p-tabPanel [header]="category | titlecase" class="p-0 m-0">
+            <ng-container *ngIf="catFoods.length > 0">
+              <div class="row p-0 m-0 d-flex justify-content-between">
+                <div
+                  class="col-lg-6 foods p-2 m-0"
+                  *ngFor="let item of catFoods"
+                >
+                  <div id="detail" class="w-100 p-0 m-0">
+                    <div class="detail_box p-0 m-0">
+                      <div
+                        class="detail_box__photo"
+                        [ngStyle]="{
+                          'background-image': 'url(' + item.img + ')'
+                        }"
+                      ></div>
+                      <div class="detail_box__button">Add to cart</div>
+                      <div class="detail_box__details">
+                        <div class="detail_box__badges">
+                          <div
+                            class="detail_box__badge detail_box__badge--rating"
+                          >
+                            {{ item.price }}
+                          </div>
+                        </div>
+                        <div class="detail_box__name">{{ item.dealName }}</div>
+                        <p-divider></p-divider>
+                        <div class="detail_box__info">
+                          <span>{{ item.description }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="catFoods.length === 0">
+              <p>No food available in this category.</p>
+            </ng-container>
+          </p-tabPanel>
+        </ng-container>
+      </p-tabView>
+    </div>
+
+    <div class="col-lg-4 pt-5 mt-5">
+      <div class="shop_card">
+        <p class="title py-3 ps-3">Order Summary</p>
+        <div class="row p-0 m-0 w-100">
+          <div class="col-lg-4 ms-0">
+            <div
+              class="shop_icon w-100 py-4 px-5 d-flex justify-content-center align-items-center"
+            >
+              <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+          </div>
+          <div class="col-lg-6 scd_part">
+            <b>Your cart is empty</b><br />
+            <span>Start adding items</span>
+          </div>
+          <div class="col-lg-2 d-flex align-items-center">
+            <b>{{ totalAmount | currency }}</b>
+          </div>
+        </div>
+        <p-divider></p-divider>
+        <div class="row">
+          <div class="d-flex flex-column gap-2">
+            <div
+              *ngFor="let order of orders"
+              class="field-checkbox d-flex justify-content-between align-items-center px-3"
+            >
+              <div class="orders d-flex align-items-center gap-1">
+                <p-radioButton
+                  [inputId]="order.name"
+                  [ngModel]="isSelected(order)"
+                  (onClick)="toggleOrderSelection(order)"
+                ></p-radioButton>
+                <label [for]="order.name" class="ml-2 pt-1">{{
+                  order.name
+                }}</label>
+              </div>
+              <div class="d-flex align-items-center">
+                {{ order.amount }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <p-divider></p-divider>
+        <div class="row d-flex justify-content-between align-items-center total_amount">
+          <div class="col-lg-9">
+            <h1 class="ps-3 pb-2">TOTAL</h1>
+          </div>
+          <div class="col-lg-3 d-flex justify-content-end align-items-start pb-3 pe-4">
+            <b>{{ totalAmount | currency }}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
