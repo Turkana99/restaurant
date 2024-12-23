@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="row menu content m-0 mb-5">
+  <div class="row menu content mx-0 pb-5">
     <div class="col-lg-8 p-0 m-0">
       <div class="pt-4 pb-4">
         <p-inputGroup>
@@ -22,7 +22,7 @@
             icon="pi pi-search"
             class="p-button-warning"
           >
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
           </button>
         </p-inputGroup>
       </div>
@@ -47,14 +47,13 @@
                           'background-image': 'url(' + item.img + ')'
                         }"
                       ></div>
-                      <div class="detail_box__button">Add to cart</div>
+                      <!-- <div class="detail_box__button">Add to cart</div> -->
                       <div class="detail_box__details">
-                        <div class="detail_box__badges">
-                          <div
-                            class="detail_box__badge detail_box__badge--rating"
-                          >
-                            {{ item.price }}
+                        <div class="detail_box__badges d-flex gap-2">
+                          <div class="amount flex-fill d-flex align-items-center">
+                            {{ item.price }} AZN
                           </div>
+                          <div class="add-btn flex-fill">  <i class="fa-solid fa-cart-shopping"></i> Add to cart</div>
                         </div>
                         <div class="detail_box__name">{{ item.dealName }}</div>
                         <p-divider></p-divider>
@@ -75,55 +74,138 @@
       </p-tabView>
     </div>
 
-    <div class="col-lg-4 pt-5 mt-5">
-      <div class="shop_card">
-        <p class="title py-3 ps-3">Order Summary</p>
-        <div class="row p-0 m-0 w-100">
-          <div class="col-lg-4 ms-0">
+    <div class="col-lg-4">
+      <div class="order-summary pt-5 mt-5">
+        <div class="shop_card">
+          <p class="title py-3 ps-3">Order Summary</p>
+
+          <!-- Header Section -->
+          <!-- <div
+            class="order-header px-3"
+            style="
+              display: grid;
+              grid-template-columns: 1fr 2fr 1fr;
+              gap: 1rem;
+              align-items: center;
+            "
+          >
             <div
-              class="shop_icon w-100 py-4 px-5 d-flex justify-content-center align-items-center"
+              class="shop_icon"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1rem;
+              "
             >
               <i class="fa-solid fa-cart-shopping"></i>
             </div>
-          </div>
-          <div class="col-lg-6 scd_part">
-            <b>Your cart is empty</b><br />
-            <span>Start adding items</span>
-          </div>
-          <div class="col-lg-2 d-flex align-items-center">
-            <b>{{ totalAmount | currency }}</b>
-          </div>
-        </div>
-        <p-divider></p-divider>
-        <div class="row">
-          <div class="d-flex flex-column gap-2">
+            <div class="order-info">
+              <b *ngIf="orders.length === 0">Your cart is empty</b>
+              <span *ngIf="orders.length === 0">Start adding items</span>
+            </div>
             <div
-              *ngFor="let order of orders"
-              class="field-checkbox d-flex justify-content-between align-items-center px-3"
+              class="order-total"
+              style="display: flex; justify-content: flex-end"
             >
-              <div class="orders d-flex align-items-center gap-1">
-                <p-radioButton
-                  [inputId]="order.name"
-                  [ngModel]="isSelected(order)"
-                  (onClick)="toggleOrderSelection(order)"
-                ></p-radioButton>
-                <label [for]="order.name" class="ml-2 pt-1">{{
-                  order.name
-                }}</label>
+              <b>{{ totalAmount | currency }}</b>
+            </div>
+          </div>
+
+          <p-divider></p-divider> -->
+
+          <!-- Orders Section -->
+          <div
+            class="order-list"
+            style="display: grid; grid-template-columns: 1fr; gap: 1rem"
+          >
+            <div
+              *ngFor="let order of orders; let i = index"
+              class="order-item px-3"
+              style="
+                display: grid;
+                grid-template-columns: 2fr 3fr 2fr;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.5rem;
+                border-bottom: 1px solid #ddd;
+              "
+            >
+              <!-- Order Name -->
+              <div class="order-details">
+                <label class="order-name"
+                  ><b>{{ order.name }}</b></label
+                >
               </div>
-              <div class="d-flex align-items-center">
-                {{ order.amount }}
+
+              <!-- Quantity Controls -->
+              <div
+                class="quantity-controls"
+                style="display: flex; align-items: center; gap: 0.5rem"
+              >
+                <button
+                  class="btn btn-sm"
+                  (click)="decreaseQuantity(order)"
+                  [disabled]="order.quantity <= 1"
+                >
+                  -
+                </button>
+                <span>{{ order.quantity }}</span>
+                <button class="btn btn-sm" (click)="increaseQuantity(order)">
+                  +
+                </button>
+              </div>
+
+              <!-- Amount and Remove Button -->
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  align-items: center;
+                  gap: 1rem;
+                "
+              >
+                <span>{{ order.amount | currency }}</span>
+                <button class="btn btn-sm btn-danger" (click)="removeOrder(i)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               </div>
             </div>
           </div>
-        </div>
-        <p-divider></p-divider>
-        <div class="row d-flex justify-content-between align-items-center total_amount">
-          <div class="col-lg-9">
-            <h1 class="ps-3 pb-2">TOTAL</h1>
+
+          <!-- Total Section -->
+          <div
+            class="order-total-section d-flex justify-content-between align-items-center pt-3 pb-0 px-3"
+            style="
+              display: grid;
+              grid-template-columns: 2fr 1fr;
+              align-items: center;
+              padding: 1rem 0;
+            "
+          >
+            <div>
+              <h1 class="pt-1">TOTAL</h1>
+            </div>
+            <div style="display: flex; justify-content: flex-end">
+              <b>{{ totalAmount | currency }}</b>
+            </div>
           </div>
-          <div class="col-lg-3 d-flex justify-content-end align-items-start pb-3 pe-4">
-            <b>{{ totalAmount | currency }}</b>
+
+          <p-divider class="p-0"></p-divider>
+          <div
+            class="w-100 order-submit d-flex justify-content-center align-items-center px-3 py-0 pb-3"
+            style="
+              width: 100%;
+              display: grid;
+              grid-template-columns: 2fr 1fr;
+              align-items: center;
+            "
+          >
+            <div>
+              <button class="submit-btn w-100" (click)="show()" label="Show" >
+                Səbəti təsdiqlə
+              </button>
+            </div>
           </div>
         </div>
       </div>

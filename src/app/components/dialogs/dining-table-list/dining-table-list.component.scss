@@ -1,0 +1,42 @@
+@import "../../styles/variables.scss";
+
+.dining-tables-list {
+  .dining-tables-btn {
+    background-color: white;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 500;
+    font-size: 18px;
+    width: 100%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $main-color;
+      color: white;
+    }
+
+    &.selected-table {
+      background-color: $main-color;
+      color: white;
+    }
+  }
+
+  .submit-btn {
+    border: none;
+    background-color: $main-color;
+    color: white;
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 9px 35px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+::ng-deep .p-dialog-title {
+  font-size: 22px;
+  font-family: "Poppins", sans-serif !important;
+}
