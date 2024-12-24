@@ -6,15 +6,12 @@
       >
         <a routerLink="main">
           <div class="logo">
-            <img
-              src="assets/images/foodLogo.png"
-              alt="Logo"
-            />
+            <img src="assets/images/restaurant.png" alt="Logo" />
           </div>
         </a>
         <a routerLink="main">
           <div class="pt-2">
-            <span class="py-0 m-0">Food.<b class="scd">Center</b></span>
+            <span class="py-0 m-0">Ləziz.<b class="scd">Restaurant</b></span>
           </div>
         </a>
       </div>
@@ -68,7 +65,7 @@
             </a>
           </li> -->
           <!-- Language Dropdown -->
-          <li class="nav-item dropdown px-2">
+          <li class="nav-item dropdown px-2 m-0">
             <a
               class="nav-link dropdown-toggle text-uppercase"
               href="#"
@@ -77,17 +74,20 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              Az
+              {{ selectedLanguage }}
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li>
-                <a class="dropdown-item" (click)="changeLanguage('az')">Az</a>
-              </li>
-              <li>
-                <a class="dropdown-item" (click)="changeLanguage('en')">En</a>
-              </li>
-              <li>
-                <a class="dropdown-item" (click)="changeLanguage('ru')">Ru</a>
+            <ul
+              class="dropdown-menu py-0"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li *ngFor="let lang of languages">
+                <a
+                  class="dropdown-item"
+                  [class.active]="selectedLanguage === lang.displayName"
+                  (click)="changeLanguage(lang)"
+                >
+                  {{ lang.displayName }}
+                </a>
               </li>
             </ul>
           </li>

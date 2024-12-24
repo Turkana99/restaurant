@@ -1,12 +1,17 @@
 import { Component, ElementRef, HostListener } from '@angular/core';
 import { LangService } from '../../core/services/language.service';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { CommonModule, ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -14,31 +19,24 @@ export class HeaderComponent {
   whiteLogo = false;
   searchVisible: boolean = false;
   searchQuery: string = '';
+  languages: { code: string; displayName: string }[] = [];
+  selectedLanguage: string = 'Az';
 
   constructor(
     public langService: LangService,
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private viewportScroller: ViewportScroller,
-    private elementRef: ElementRef 
+    private elementRef: ElementRef
   ) {}
+
   ngOnInit(): void {
+    this.getAllLanguage();
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.viewportScroller.scrollToPosition([0, 0]);
       }
     });
-  }
-
-  changeLanguage(language: string): void {
-    const url = this.router.url;
-    const [lang, ...rest] = url.substring(1, url.length).split('/');
-    const [route, param] = rest;
-
-    const newRoute = [route];
-    if (param) newRoute.push(param);
-
-    this.router.navigate([`/${language}`, ...newRoute]);
   }
 
   @HostListener('window:scroll', [])
@@ -62,15 +60,15 @@ export class HeaderComponent {
     }
   }
 
-  // get Language() {
-  //   return this.langService.getTranslate();
-  // }
+  getAllLanguage() {
+    this.langService.getLanguages().subscribe((response) => {
+      this.languages = response.items;
+    });
+  }
 
-  // get currentLanguage() {
-  //   return this.langService.getLanguage();
-  // }
-
-  // redirectTo(route: string) {
-  //   return this.langService.getRoute(this.currentLanguage)[route];
-  // }
+  // Change the selected language
+  changeLanguage(lang: { code: string; displayName: string }) {
+    this.selectedLanguage = lang.displayName;
+    console.log('Language changed to:', lang.code);
+  }
 }

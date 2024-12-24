@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -9,6 +9,7 @@ import { CreateOrderComponent } from '../create-order/create-order.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { DiningTablesService } from '../../core/services/diningtables.service';
 
 @Component({
   selector: 'app-dining-table-list',
@@ -22,25 +23,12 @@ import { ToastModule } from 'primeng/toast';
     ConfirmDialogModule, // Ensure this module is imported
     ToastModule, // Ensure this module is imported
   ],
-  providers: [ConfirmationService, MessageService], // Ensure these services are provided
+  providers: [ConfirmationService, MessageService, DiningTablesService], // Ensure these services are provided
   templateUrl: './dining-table-list.component.html',
   styleUrls: ['./dining-table-list.component.scss'],
 })
-export class DiningTableListComponent {
-  tables: string[] = [
-    'Masa 1',
-    'Masa 2',
-    'Masa 3',
-    'Masa 4',
-    'Masa 5',
-    'Masa 6',
-    'Masa 7',
-    'Masa 8',
-    'Masa 9',
-    'Masa 10',
-    'Masa 11',
-    'Masa 12',
-  ];
+export class DiningTableListComponent implements OnInit {
+  tables: any[] = [];
   selectedTable: string | null = null;
 
   // Dialog reference
@@ -49,8 +37,12 @@ export class DiningTableListComponent {
   constructor(
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private diningTablesService: DiningTablesService
   ) {}
+  ngOnInit(): void {
+    this.getAllTables();
+  }
 
   // Select a table and highlight it
   selectTable(table: string) {
@@ -61,37 +53,18 @@ export class DiningTableListComponent {
   confirmSelection() {
     if (this.selectedTable) {
       console.log('Selected Table:', this.selectedTable);
-
-      // Show the confirmation dialog
-      this.confirm1();
+      this.ref?.close();
     }
   }
 
-  // Show the confirmation dialog
-  confirm1() {
-    this.confirmationService.confirm({
-      message: 'Are you sure that you want to proceed?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: 'pi pi-check',
-      rejectIcon: 'pi pi-times',
-      accept: () => {
-        // Handle accept action
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Confirmed',
-          detail: 'You have accepted.',
-        });
-      },
-      reject: () => {
-        // Handle reject action
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Rejected',
-          detail: 'You have rejected.',
-          life: 3000,
-        });
-      },
+
+
+  getAllTables() {
+    this.diningTablesService.getDiningTables().subscribe((response) => {
+      console.log("res", response);
+      this.tables = response;
+      console.log("this.tables", this.tables);
+      
     });
   }
 }

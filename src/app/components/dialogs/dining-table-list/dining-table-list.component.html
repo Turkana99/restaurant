@@ -6,7 +6,7 @@
       [ngClass]="{ 'selected-table': selectedTable === table }"
       (click)="selectTable(table)"
     >
-      {{ table }}
+      {{ table?.name }}
     </button>
   </div>
 

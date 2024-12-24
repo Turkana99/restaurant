@@ -31,46 +31,48 @@
         class="p-0 m-0"
         (activeIndexChange)="onCategoryChange(categories[$event])"
       >
-        <ng-container *ngFor="let category of categories; let i = index">
-          <p-tabPanel [header]="category | titlecase" class="p-0 m-0">
-            <ng-container *ngIf="catFoods.length > 0">
-              <div class="row p-0 m-0 d-flex justify-content-between">
-                <div
-                  class="col-lg-6 foods p-2 m-0"
-                  *ngFor="let item of catFoods"
-                >
-                  <div id="detail" class="w-100 p-0 m-0">
-                    <div class="detail_box p-0 m-0">
-                      <div
-                        class="detail_box__photo"
-                        [ngStyle]="{
-                          'background-image': 'url(' + item.img + ')'
-                        }"
-                      ></div>
-                      <!-- <div class="detail_box__button">Add to cart</div> -->
-                      <div class="detail_box__details">
-                        <div class="detail_box__badges d-flex gap-2">
-                          <div class="amount flex-fill d-flex align-items-center">
-                            {{ item.price }} AZN
-                          </div>
-                          <div class="add-btn flex-fill">  <i class="fa-solid fa-cart-shopping"></i> Add to cart</div>
+      <ng-container *ngFor="let category of categories">
+        <p-tabPanel [header]="category.name" class="p-0 m-0">
+          <ng-container *ngIf="category.children && category.children.length > 0">
+            <div class="row p-0 m-0 d-flex justify-content-between">
+              <div
+                class="col-lg-6 foods p-2 m-0"
+                *ngFor="let item of category.children"
+              >
+                <div id="detail" class="w-100 p-0 m-0">
+                  <div class="detail_box p-0 m-0">
+                    <div
+                      class="detail_box__photo"
+                      [ngStyle]="{
+                        'background-image': 'url(' + (item.img || 'default-image.jpg') + ')'
+                      }"
+                    ></div>
+                    <div class="detail_box__details">
+                      <div class="detail_box__badges d-flex gap-2">
+                        <div class="amount flex-fill d-flex align-items-center">
+                          {{ item.price || 'N/A' }} AZN
                         </div>
-                        <div class="detail_box__name">{{ item.dealName }}</div>
-                        <p-divider></p-divider>
-                        <div class="detail_box__info">
-                          <span>{{ item.description }}</span>
+                        <div class="add-btn flex-fill">
+                          <i class="fa-solid fa-cart-shopping"></i> Add to cart
                         </div>
+                      </div>
+                      <div class="detail_box__name">{{ item.name }}</div>
+                      <p-divider></p-divider>
+                      <div class="detail_box__info">
+                        <span>{{ item.description || 'No description available.' }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </ng-container>
-            <ng-container *ngIf="catFoods.length === 0">
-              <p>No food available in this category.</p>
-            </ng-container>
-          </p-tabPanel>
-        </ng-container>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!category.children || category.children.length === 0">
+            <p>No food available in this category.</p>
+          </ng-container>
+        </p-tabPanel>
+      </ng-container>
+      
       </p-tabView>
     </div>
 
@@ -165,7 +167,7 @@
                   gap: 1rem;
                 "
               >
-                <span>{{ order.amount | currency }}</span>
+                <span>{{ order.amount }} AZN</span>
                 <button class="btn btn-sm btn-danger" (click)="removeOrder(i)">
                   <i class="fa-solid fa-trash"></i>
                 </button>
@@ -187,7 +189,7 @@
               <h1 class="pt-1">TOTAL</h1>
             </div>
             <div style="display: flex; justify-content: flex-end">
-              <b>{{ totalAmount | currency }}</b>
+              <b>{{ totalAmount}} AZN</b>
             </div>
           </div>
 

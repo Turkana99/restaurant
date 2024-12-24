@@ -15,6 +15,7 @@ import {
   DynamicDialogModule,
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
+import { CategoryService } from '../../core/services/categories.service';
 
 @Component({
   selector: 'app-menu',
@@ -38,6 +39,7 @@ import {
 export class MenuComponent implements OnInit {
   selectedCategory: string = 'salad';
   selectedOrders: any[] = [];
+  categories: any[] = [];
   orders = [
     { name: 'Cheese', amount: 10, quantity: 1 },
     { name: 'Caesar Salad', amount: 30, quantity: 1 },
@@ -46,7 +48,6 @@ export class MenuComponent implements OnInit {
     { name: 'Coca-cola', amount: 110, quantity: 1 },
   ];
   catFoods: any[] = [];
-  categories: string[] = ['salad', 'pizza', 'burger', 'mainDeal', 'sushi'];
   foods = [
     {
       img: 'assets/images/pizza.jpg',
@@ -140,7 +141,10 @@ export class MenuComponent implements OnInit {
 
   ref: DynamicDialogRef | undefined;
 
-  constructor(public dialogService: DialogService) {}
+  constructor(
+    public dialogService: DialogService,
+    private categoryService: CategoryService
+  ) {}
 
   show() {
     this.ref = this.dialogService.open(DiningTableListComponent, {
@@ -148,6 +152,7 @@ export class MenuComponent implements OnInit {
     });
   }
   ngOnInit() {
+    this.getAllCategory();
     this.getFilteredFoods(this.selectedCategory);
   }
 
@@ -188,5 +193,12 @@ export class MenuComponent implements OnInit {
 
   removeOrder(index: number) {
     this.orders.splice(index, 1);
+  }
+  getAllCategory() {
+    this.categoryService.getCategories().subscribe((response) => {
+      const mainMenu = response.find((item: any) => item.name === 'Əsas menyu');
+      this.categories = mainMenu ? mainMenu.children : [];
+      console.log('Filtered categories:', this.categories);
+    });
   }
 }
