@@ -16,6 +16,8 @@ import {
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
 import { CategoryService } from '../../core/services/categories.service';
+import { LangService } from '../../core/services/language.service';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -40,6 +42,8 @@ export class MenuComponent implements OnInit {
   selectedCategory: string = 'salad';
   selectedOrders: any[] = [];
   categories: any[] = [];
+  totalAmount: number = 0;
+
   orders = [
     { name: 'Cheese', amount: 10, quantity: 1 },
     { name: 'Caesar Salad', amount: 30, quantity: 1 },
@@ -143,6 +147,7 @@ export class MenuComponent implements OnInit {
 
   constructor(
     public dialogService: DialogService,
+    private langService: LangService,
     private categoryService: CategoryService
   ) {}
 
@@ -151,9 +156,45 @@ export class MenuComponent implements OnInit {
       header: 'Masanı seçin',
     });
   }
+
   ngOnInit() {
-    this.getAllCategory();
     this.getFilteredFoods(this.selectedCategory);
+
+    // Subscribe to language changes
+    this.langService.currentLanguage$
+      .pipe(distinctUntilChanged()) // Ensure only distinct language changes trigger fetch
+      .subscribe((language) => {
+        this.fetchCategories(language);
+      });
+
+    // Fetch categories on initial load with the default language
+    this.fetchCategories(this.langService.currentLanguageValue);
+  }
+
+  fetchCategories(language: string) {
+    this.categoryService
+      .getCategoriesByLanguage(language)
+      .subscribe((response) => {
+        console.log('response', response);
+
+        if (response.items && Array.isArray(response.items)) {
+          const mainCategory = response.items.find(
+            (x: any) => x.name === 'Əsas menyu'
+          );
+
+          if (mainCategory) {
+            this.categories = mainCategory.children;
+            console.log("this.categories",this.categories);
+            
+          } else {
+            this.categories = [];
+          }
+        } else {
+          this.categories = [];
+        }
+
+        console.log('Categories for language:', language, this.categories);
+      });
   }
 
   getFilteredFoods(category: string) {
@@ -174,31 +215,45 @@ export class MenuComponent implements OnInit {
     }
   }
 
-  get totalAmount() {
-    return this.orders.reduce(
-      (sum, order) => sum + order.quantity * order.amount,
-      0
-    );
-  }
-
-  increaseQuantity(order: any) {
-    order.quantity++;
+  // get totalAmount() {
+  //   return this.orders.reduce(
+  //     (sum, order) => sum + order.quantity * order.amount,
+  //     0
+  //   );
+  // }
+  addToCart(item: any) {
+    const existingOrder = this.orders.find((order) => order.name === item.name);
+    if (existingOrder) {
+      existingOrder.quantity++;
+      existingOrder.amount += item.price;
+    } else {
+      this.orders.push({ ...item, quantity: 1, amount: item.price });
+    }
+    this.calculateTotal();
   }
 
   decreaseQuantity(order: any) {
     if (order.quantity > 1) {
       order.quantity--;
+      order.amount -= order.price;
     }
+    this.calculateTotal();
+  }
+
+  increaseQuantity(order: any) {
+    order.quantity++;
+    order.amount += order.price;
+    this.calculateTotal();
+  }
+
+  calculateTotal() {
+    this.totalAmount = this.orders.reduce(
+      (sum, order) => sum + order.amount,
+      0
+    );
   }
 
   removeOrder(index: number) {
     this.orders.splice(index, 1);
-  }
-  getAllCategory() {
-    this.categoryService.getCategories().subscribe((response) => {
-      const mainMenu = response.find((item: any) => item.name === 'Əsas menyu');
-      this.categories = mainMenu ? mainMenu.children : [];
-      console.log('Filtered categories:', this.categories);
-    });
   }
 }

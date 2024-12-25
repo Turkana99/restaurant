@@ -60,15 +60,17 @@ export class HeaderComponent {
     }
   }
 
+  // Fetch all available languages
   getAllLanguage() {
     this.langService.getLanguages().subscribe((response) => {
       this.languages = response.items;
     });
   }
 
-  // Change the selected language
+  // Change language and notify other components
   changeLanguage(lang: { code: string; displayName: string }) {
     this.selectedLanguage = lang.displayName;
+    this.langService.setLanguage(lang.code); // Notify the service
     console.log('Language changed to:', lang.code);
   }
 }
