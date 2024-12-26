@@ -18,6 +18,7 @@ import {
 import { CategoryService } from '../../core/services/categories.service';
 import { LangService } from '../../core/services/language.service';
 import { distinctUntilChanged } from 'rxjs';
+import { ProductService } from '../../core/services/products.service';
 
 @Component({
   selector: 'app-menu',
@@ -34,7 +35,7 @@ import { distinctUntilChanged } from 'rxjs';
     InputTextModule,
     MatDialogModule,
   ],
-  providers: [DialogService],
+  providers: [DialogService, ProductService, CategoryService],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
 })
@@ -42,6 +43,7 @@ export class MenuComponent implements OnInit {
   selectedCategory: string = 'salad';
   selectedOrders: any[] = [];
   categories: any[] = [];
+  subCategories: any = [];
   totalAmount: number = 0;
 
   orders = [
@@ -52,103 +54,15 @@ export class MenuComponent implements OnInit {
     { name: 'Coca-cola', amount: 110, quantity: 1 },
   ];
   catFoods: any[] = [];
-  foods = [
-    {
-      img: 'assets/images/pizza.jpg',
-      dealName: 'Aspen',
-      category: 'pizza',
-      description: 'Bacon, Onion, Mushroom, Mozzarella',
-      price: 50,
-    },
-    {
-      img: 'assets/images/pizza2.jpg',
-      dealName: 'Bolognese',
-      category: 'pizza',
-      description: 'Ragu, Mozzarella',
-      price: 40,
-    },
-    {
-      img: 'assets/images/pizza3.jpg',
-      dealName: 'Castello',
-      category: 'pizza',
-      description: 'Bacon, Sausage, Jalapeno, Onion, Mozzarella',
-      price: 60,
-    },
-    {
-      img: 'assets/images/pizza4.jpg',
-      dealName: 'Fitness',
-      category: 'pizza',
-      description: 'Tomato, Corn, Broccoli, Paprika, Feta Cheese, Mozzarella',
-      price: 100,
-    },
-    {
-      img: 'assets/images/Salad1.jpg',
-      dealName: 'Caesar Salad',
-      category: 'salad',
-      description: 'Lettuce, Grilled Chicken, Toasted Bread, Garlic Dressing',
-      price: 30,
-    },
-    {
-      img: 'assets/images/Salad2.jpg',
-      dealName: 'Greek Salad',
-      category: 'salad',
-      description: 'Tomato, Onion, Olives, Cucumber, Feta Cheese',
-      price: 50,
-    },
-    {
-      img: 'assets/images/fish.jpg',
-      dealName: 'Grilled Salmon',
-      category: 'mainDeal',
-      description: 'Salmon, Lime, Pasta',
-      price: 80,
-    },
-    {
-      img: 'assets/images/sushi.jpg',
-      dealName: 'Sushi',
-      category: 'sushi',
-      description: 'Sushi, Rice, Soy Sauce, Toasted Sesame Seeds',
-      price: 50,
-    },
-    {
-      img: 'assets/images/burger1.jpg',
-      dealName: 'Beef Burger',
-      category: 'burger',
-      description: 'Beef Meat, Bacon, Cucumber, Cheese, Caramelized Onion Jam',
-      price: 30,
-    },
-    {
-      img: 'assets/images/burger2.jpg',
-      dealName: 'Double Beef Burger',
-      category: 'burger',
-      description:
-        'Double Beef Meat, Bacon, Cucumber, Cheese, Caramelized Onion Jam',
-      price: 50,
-    },
-    {
-      img: 'assets/images/burger4.jpg',
-      dealName: 'Chicken Burger',
-      category: 'burger',
-      description:
-        'Chicken Meat, Double Cheese, Tomato, Cucumber, Parsley, Caramelized Onion Jam',
-      price: 80,
-    },
-    {
-      img: 'assets/images/burger3.jpg',
-      dealName: 'Mexican Burger',
-      category: 'burger',
-      description: 'Chicken Meat, Mexican Topping, Bacon, Onion, Cheese',
-      price: 60,
-    },
-  ];
-
-  // constructor(private dialog: MatDialog) {}
+  foods: any[] = [];
 
   ref: DynamicDialogRef | undefined;
 
   constructor(
     public dialogService: DialogService,
     private langService: LangService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private productService: ProductService
   ) {}
 
   show() {
@@ -159,41 +73,51 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.getFilteredFoods(this.selectedCategory);
-    // Subscribe to language changes
     this.langService.currentLanguage$
-      .pipe(distinctUntilChanged()) // Ensure only distinct language changes trigger fetch
+      .pipe(distinctUntilChanged())
       .subscribe(() => {
         this.fetchCategories();
       });
   }
-
   fetchCategories() {
     this.categoryService.getCategoriesByLanguage().subscribe((response) => {
-      if (response.items) {
-        const mainCategory = response.items.find(
-          (x: any) => x.name === 'Əsas menyu'
-        );
+      this.categories = response.filter(
+        (category: any) => category.ownerId === null
+      );
 
-        if (mainCategory) {
-          this.categories = mainCategory.children;
-          console.log('this.categories', this.categories);
-        } else {
-          this.categories = [];
-        }
-      } else {
-        this.categories = [];
+      if (this.categories.length > 0) {
+        this.onCategoryChange(this.categories[0].id);
       }
     });
   }
+
+  onCategoryChange(categoryId: string) {
+    this.productService.getProductsByCategory(categoryId).subscribe(
+      (products) => {
+        this.catFoods = products;
+      },
+      (error) => {
+        console.error('Failed to fetch products:', error);
+        this.catFoods = [];
+      }
+    );
+  }
+
+  openMenu(id: number) {
+    this.subCategories = this.categories.filter((x) => x.id == id);
+
+  }
+
+  
 
   getFilteredFoods(category: string) {
     this.catFoods = this.foods.filter((food) => food.category === category);
   }
 
-  onCategoryChange(category: string) {
-    this.selectedCategory = category;
-    this.getFilteredFoods(this.selectedCategory);
-  }
+  // onCategoryChange(category: string) {
+  //   this.selectedCategory = category;
+  //   this.getFilteredFoods(this.selectedCategory);
+  // }
 
   toggleOrderSelection(order: any) {
     const index = this.selectedOrders.indexOf(order);
@@ -210,6 +134,7 @@ export class MenuComponent implements OnInit {
   //     0
   //   );
   // }
+
   addToCart(item: any) {
     const existingOrder = this.orders.find((order) => order.name === item.name);
     if (existingOrder) {

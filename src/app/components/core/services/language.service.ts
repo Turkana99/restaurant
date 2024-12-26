@@ -11,7 +11,17 @@ export class LangService {
   culture!: string;
   private languageSubject = new BehaviorSubject<string>('');
   currentLanguage$!: any;
-
+  constantNavItem: any = {
+    'az-AZ': {
+      homePage: 'Ana Səhifə',
+    },
+    'en-US': {
+      homePage: 'Home Page',
+    },
+    'ru-RU': {
+      homePage: 'Главная страница',
+    },
+  };
   constructor(private http: HttpClient) {
     this.lang = JSON.parse(localStorage.getItem('lang') as string);
     this.culture = (this.lang as any)?.culture || 'az-AZ';
@@ -33,5 +43,9 @@ export class LangService {
     this.lang = JSON.parse(localStorage.getItem('lang') as string);
     this.culture = (this.lang as any)?.culture;
     this.languageSubject.next(language.culture);
+  }
+
+  getTranslate() {
+    return this.constantNavItem[this.languageSubject.value];
   }
 }

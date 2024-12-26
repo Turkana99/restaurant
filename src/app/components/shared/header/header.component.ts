@@ -12,6 +12,7 @@ import { CommonModule, ViewportScroller } from '@angular/common';
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule],
+  providers: [LangService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -74,5 +75,9 @@ export class HeaderComponent {
     this.selectedLanguage = lang.displayName;
     this.langService.setLanguage(lang);
     console.log('Language changed to:', lang.culture);
+  }
+
+  get Language() {
+    return this.langService.getTranslate();
   }
 }
