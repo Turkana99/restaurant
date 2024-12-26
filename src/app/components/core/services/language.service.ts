@@ -7,10 +7,17 @@ import { environment } from '../../../environment';
   providedIn: 'root',
 })
 export class LangService {
-  private languageSubject = new BehaviorSubject<string>('az-AZ');
-  currentLanguage$ = this.languageSubject.asObservable();
+  lang!: string;
+  culture!: string;
+  private languageSubject = new BehaviorSubject<string>('');
+  currentLanguage$!: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.lang = JSON.parse(localStorage.getItem('lang') as string);
+    this.culture = (this.lang as any)?.culture || 'az-AZ';
+    this.currentLanguage$ = this.languageSubject.asObservable();
+    this.languageSubject.next(this.lang);
+  }
 
   // Getter to expose the current value of languageSubject
   get currentLanguageValue(): string {
@@ -21,7 +28,10 @@ export class LangService {
     return this.http.get<any>(environment.getLanguagesUrl);
   }
 
-  setLanguage(language: string) {
-    this.languageSubject.next(language);
+  setLanguage(language: { culture: string; displayName: string }) {
+    localStorage.setItem('lang', JSON.stringify(language));
+    this.lang = JSON.parse(localStorage.getItem('lang') as string);
+    this.culture = (this.lang as any)?.culture;
+    this.languageSubject.next(language.culture);
   }
 }

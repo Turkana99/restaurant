@@ -19,8 +19,8 @@ export class HeaderComponent {
   whiteLogo = false;
   searchVisible: boolean = false;
   searchQuery: string = '';
-  languages: { code: string; displayName: string }[] = [];
-  selectedLanguage: string = 'Az';
+  languages: { culture: string; displayName: string }[] = [];
+  selectedLanguage: string = '';
 
   constructor(
     public langService: LangService,
@@ -31,6 +31,8 @@ export class HeaderComponent {
   ) {}
 
   ngOnInit(): void {
+    this.selectedLanguage =
+      JSON.parse(localStorage.getItem('lang') as any)?.displayName || 'Az';
     this.getAllLanguage();
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -62,15 +64,15 @@ export class HeaderComponent {
 
   // Fetch all available languages
   getAllLanguage() {
-    this.langService.getLanguages().subscribe((response) => {
+    this.langService.getLanguages().subscribe((response: any) => {
       this.languages = response.items;
     });
   }
 
   // Change language and notify other components
-  changeLanguage(lang: { code: string; displayName: string }) {
+  changeLanguage(lang: { culture: string; displayName: string }) {
     this.selectedLanguage = lang.displayName;
-    this.langService.setLanguage(lang.code); // Notify the service
-    console.log('Language changed to:', lang.code);
+    this.langService.setLanguage(lang);
+    console.log('Language changed to:', lang.culture);
   }
 }

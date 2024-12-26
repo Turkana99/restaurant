@@ -9,7 +9,7 @@ import { CreateOrderComponent } from '../create-order/create-order.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { DiningTablesService } from '../../core/services/diningtables.service';
+import { DiningTablesService } from '../../core/services/diningTables.service';
 
 @Component({
   selector: 'app-dining-table-list',
@@ -64,7 +64,7 @@ export class DiningTableListComponent implements OnInit {
       console.log("res", response);
       this.tables = response;
       console.log("this.tables", this.tables);
-      
+
     });
   }
 }

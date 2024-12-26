@@ -159,42 +159,31 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.getFilteredFoods(this.selectedCategory);
-
     // Subscribe to language changes
     this.langService.currentLanguage$
       .pipe(distinctUntilChanged()) // Ensure only distinct language changes trigger fetch
-      .subscribe((language) => {
-        this.fetchCategories(language);
+      .subscribe(() => {
+        this.fetchCategories();
       });
-
-    // Fetch categories on initial load with the default language
-    this.fetchCategories(this.langService.currentLanguageValue);
   }
 
-  fetchCategories(language: string) {
-    this.categoryService
-      .getCategoriesByLanguage(language)
-      .subscribe((response) => {
-        console.log('response', response);
+  fetchCategories() {
+    this.categoryService.getCategoriesByLanguage().subscribe((response) => {
+      if (response.items) {
+        const mainCategory = response.items.find(
+          (x: any) => x.name === 'Əsas menyu'
+        );
 
-        if (response.items && Array.isArray(response.items)) {
-          const mainCategory = response.items.find(
-            (x: any) => x.name === 'Əsas menyu'
-          );
-
-          if (mainCategory) {
-            this.categories = mainCategory.children;
-            console.log("this.categories",this.categories);
-            
-          } else {
-            this.categories = [];
-          }
+        if (mainCategory) {
+          this.categories = mainCategory.children;
+          console.log('this.categories', this.categories);
         } else {
           this.categories = [];
         }
-
-        console.log('Categories for language:', language, this.categories);
-      });
+      } else {
+        this.categories = [];
+      }
+    });
   }
 
   getFilteredFoods(category: string) {
