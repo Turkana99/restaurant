@@ -7,7 +7,6 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LangService } from './language.service';
-
 @Injectable()
 export class LanguageInterceptor implements HttpInterceptor {
   intercept(
