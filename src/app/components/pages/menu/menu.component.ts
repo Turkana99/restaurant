@@ -46,13 +46,7 @@ export class MenuComponent implements OnInit {
   subCategories: any = [];
   totalAmount: number = 0;
 
-  orders = [
-    { name: 'Cheese', amount: 10, quantity: 1 },
-    { name: 'Caesar Salad', amount: 30, quantity: 1 },
-    { name: 'Soup', amount: 30, quantity: 2 },
-    { name: 'Margarita', amount: 100, quantity: 2 },
-    { name: 'Coca-cola', amount: 110, quantity: 1 },
-  ];
+  orders: any[] = [];
   catFoods: any[] = [];
   foods: any[] = [];
 
@@ -91,10 +85,13 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  onCategoryChange(categoryId: string) {
+  onCategoryChange(event: any) {
+    console.log('event', event);
+    const categoryId = this.subCategories[event]?.id;
     this.productService.getProductsByCategory(categoryId).subscribe(
       (products) => {
-        this.catFoods = products;
+        this.catFoods = products.items;
+        console.log('products', this.catFoods);
       },
       (error) => {
         console.error('Failed to fetch products:', error);
@@ -104,11 +101,9 @@ export class MenuComponent implements OnInit {
   }
 
   openMenu(id: number) {
-    this.subCategories = this.categories.filter((x) => x.id == id);
-
+    this.subCategories = this.categories.find((x) => x.id == id).children;
+    console.log('tsubb', this.subCategories);
   }
-
-  
 
   getFilteredFoods(category: string) {
     this.catFoods = this.foods.filter((food) => food.category === category);
@@ -136,6 +131,10 @@ export class MenuComponent implements OnInit {
   // }
 
   addToCart(item: any) {
+    if (typeof item.price !== 'number' || isNaN(item.price)) {
+      console.error('Invalid price:', item.price);
+      return;
+    }
     const existingOrder = this.orders.find((order) => order.name === item.name);
     if (existingOrder) {
       existingOrder.quantity++;
@@ -145,6 +144,7 @@ export class MenuComponent implements OnInit {
     }
     this.calculateTotal();
   }
+
 
   decreaseQuantity(order: any) {
     if (order.quantity > 1) {
@@ -169,5 +169,9 @@ export class MenuComponent implements OnInit {
 
   removeOrder(index: number) {
     this.orders.splice(index, 1);
+  }
+
+  get Language() {
+    return this.langService.getTranslate();
   }
 }

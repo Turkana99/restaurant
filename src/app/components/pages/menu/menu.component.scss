@@ -1,20 +1,19 @@
 @import "../../styles/variables.scss";
 .content {
-  padding: 0px 12vw;
+  padding: 0px 2vw;
 
   @media only screen and (max-width: 1257px) {
-    padding: 0px 40px !important;
+    padding: 1rem 30px !important;
   }
 
   @media only screen and (max-width: 1180px) {
-    padding: 0px 20px !important;
+    padding: 1rem 20px !important;
   }
 }
 .full_menu {
-  margin-top: calc(100vh - 575px);
+  margin-top: 75px !important;
 }
 .menu-option {
-  overflow-y: none !important;
   background-color: $black-bg;
   color: white;
   font-family: "Poppins", sans-serif !important;
@@ -31,9 +30,7 @@
     color: white;
     &:hover {
       background-color: $black-bg;
-      a {
-        color: $main-color !important;
-      }
+      color: $main-color !important;
     }
   }
   .btn:nth-child(even) {
@@ -45,14 +42,20 @@
     text-decoration: none;
     color: $main-color;
     &:hover {
-      background-color: $black-bg;
-      a {
-        color: white !important;
-      }
+      background-color: $main-color;
+      color: white !important;
     }
   }
 }
-
+@media only screen and (max-width: 991px) {
+  .menu-option {
+    .col-lg-8,
+    .col-lg-4 {
+      width: 100%!important;
+      justify-content: center!important;
+    }
+  }
+}
 .menu {
   overflow-y: none !important;
   .shop_card {

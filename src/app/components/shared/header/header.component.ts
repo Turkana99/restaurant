@@ -75,6 +75,7 @@ export class HeaderComponent {
     this.selectedLanguage = lang.displayName;
     this.langService.setLanguage(lang);
     console.log('Language changed to:', lang.culture);
+    location.reload();
   }
 
   get Language() {

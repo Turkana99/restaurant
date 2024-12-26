@@ -2,11 +2,14 @@
   <div
     class="overlay d-flex flex-column align-items-center justify-content-center"
   >
-    <h1>Ləziz.<span>Restoran</span></h1>
+    <h1>
+      {{ Language.brandPart1 }}<span>{{ Language.brandPart2 }}</span>
+    </h1>
     <p>
-      Where Each Plate Weaves a Story of Culinary Mastery and Passionate
-      Craftsmanship
+      {{ Language.mainPgDesc }}
     </p>
-    <button class="startBtn mt-2" (click)="startOder()">Start ordering</button>
+    <button class="startBtn mt-2" (click)="startOder()">
+      {{Language.startOrderbtn}}
+    </button>
   </div>
 </div>

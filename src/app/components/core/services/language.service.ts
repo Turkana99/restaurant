@@ -14,12 +14,39 @@ export class LangService {
   constantNavItem: any = {
     'az-AZ': {
       homePage: 'Ana Səhifə',
+      menu: 'Menyu',
+      brandPart1: 'Ləziz.',
+      brandPart2: 'Restoran',
+      breadcrumbText:'Sevimli yeməklərinizi sifariş edin',
+      mainPgDesc:'Hər bir boşqabın kulinariya ustalığı və ehtiraslı sənətkarlıq hekayəsini toxuduğu yer',
+      startOrderbtn:'Sifarişə başla',
+      ordSummary:'Sifariş yekunu',
+      total:'Cəmi',
+      frsOrderBtn:'Səbəti təsdiqlə',
     },
     'en-US': {
       homePage: 'Home Page',
+      menu: 'Menu',
+      brandPart1: 'Laziz.',
+      brandPart2: 'Restaurant',
+      breadcrumbText:'Order your favorite dishes',
+      mainPgDesc:'Where Each Plate Weaves a Story of Culinary Mastery and Passionate Craftsmanship',
+      startOrderbtn:'Start ordering',
+      ordSummary:'Order Summary',
+      total:'Total',
+      frsOrderBtn:'Confirm cart',
     },
     'ru-RU': {
       homePage: 'Главная страница',
+      menu: 'Меню',
+      brandPart1: 'Лазиз.',
+      brandPart2: 'Ресторан',
+      breadcrumbText:'Заказывайте любимые блюда',
+      mainPgDesc:'Где каждая тарелка сплетает историю кулинарного мастерства и страстного мастерства',
+      startOrderbtn:'Начать заказ',
+      ordSummary:'Резюме заказа',
+      total:'Общий',
+      frsOrderBtn:'Подтвердить корзину',
     },
   };
   constructor(private http: HttpClient) {
@@ -31,6 +58,8 @@ export class LangService {
 
   // Getter to expose the current value of languageSubject
   get currentLanguageValue(): string {
+    console.log('current language', this.languageSubject.value);
+
     return this.languageSubject.value;
   }
 
@@ -46,6 +75,6 @@ export class LangService {
   }
 
   getTranslate() {
-    return this.constantNavItem[this.languageSubject.value];
+    return this.constantNavItem[this.culture];
   }
 }
