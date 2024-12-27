@@ -23,6 +23,10 @@ export class LangService {
       ordSummary:'Sifariş yekunu',
       total:'Cəmi',
       frsOrderBtn:'Səbəti təsdiqlə',
+      emptyMessage:'Bu kateqoriyada yemək yoxdur.',
+      addCartbtn:'Səbətə əlavə et',
+      tableTitle:'Masanı seçin',
+      editCart:' Düzəliş et',
     },
     'en-US': {
       homePage: 'Home Page',
@@ -35,6 +39,10 @@ export class LangService {
       ordSummary:'Order Summary',
       total:'Total',
       frsOrderBtn:'Confirm cart',
+      emptyMessage:'No food available in this category.',
+      addCartbtn:'Add to cart',
+      tableTitle:'Select table',
+      editCart:'Edit cart',
     },
     'ru-RU': {
       homePage: 'Главная страница',
@@ -47,6 +55,10 @@ export class LangService {
       ordSummary:'Резюме заказа',
       total:'Общий',
       frsOrderBtn:'Подтвердить корзину',
+      emptyMessage:'В этой категории нет доступных продуктов.',
+      addCartbtn:'Добавить в корзину',
+      tableTitle:'Выбрать таблицу',
+      editCart:'Редактировать корзину',
     },
   };
   constructor(private http: HttpClient) {

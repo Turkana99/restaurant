@@ -40,3 +40,12 @@
   font-size: 22px;
   font-family: "Poppins", sans-serif !important;
 }
+
+
+::ng-deep .ngx-spinner {
+  z-index: 9999;
+}
+
+::ng-deep .ngx-spinner .spinner {
+  border-color: $main-color transparent transparent transparent;
+}

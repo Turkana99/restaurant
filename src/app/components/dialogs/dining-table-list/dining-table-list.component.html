@@ -1,4 +1,13 @@
-<div class="row dining-tables-list">
+<ngx-spinner
+  *ngIf="showSpinner"
+  bdColor="rgba(0, 0, 0, 0.5)"
+  size="medium"
+  color="#fff"
+  type="ball-spin-clockwise"
+  [fullScreen]="true"
+></ngx-spinner>
+
+<div class="row dining-tables-list" *ngIf="!showSpinner">
   <!-- Loop through tables -->
   <div class="col-lg-3 mb-3" *ngFor="let table of tables">
     <button
@@ -13,9 +22,12 @@
   <!-- Confirm Button -->
 
   <div class="col-12">
-    <button class="submit-btn w-100" (click)="confirmSelection()" [disabled]="!selectTable">
+    <button
+      class="submit-btn w-100"
+      (click)="confirmSelection()"
+      [disabled]="!selectTable"
+    >
       Təsdiqlə
     </button>
   </div>
-
 </div>

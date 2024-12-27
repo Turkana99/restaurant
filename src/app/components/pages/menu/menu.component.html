@@ -1,4 +1,14 @@
-<div class="full_menu h-100 m-0">
+<ngx-spinner
+  *ngIf="showSpinner"
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+>
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="full_menu h-100 m-0" *ngIf="!showSpinner">
   <!-- Breadcrumb -->
   <div
     class="menu-option content row py-3 d-flex justify-content-between align-items-center m-0"
@@ -11,18 +21,18 @@
         type="button"
         class="btn me-2"
         *ngFor="let cat of categories"
+        [ngClass]="{ selected: cat.id === selectedCategoryId }"
         (click)="openMenu(cat.id)"
       >
         {{ cat.name }}
       </button>
-      <!-- <button class="banket_btn"><a href="">Banket menyu</a></button> -->
     </div>
   </div>
 
   <div class="row menu content mx-0 pb-5">
     <!-- Search and Menu List -->
-    <div class="col-lg-8 p-0 m-0">
-      <div class="pt-4 pb-4">
+    <div class="col-lg-7 pt-4 m-0">
+      <!-- <div class="pt-4 pb-4">
         <p-inputGroup>
           <input type="text" pInputText placeholder="Axtarış" />
           <button
@@ -32,7 +42,7 @@
             class="p-button-warning"
           ></button>
         </p-inputGroup>
-      </div>
+      </div> -->
       @if(subCategories.length){
       <p-tabView (activeIndexChange)="onCategoryChange($event)">
         <p-tabPanel *ngFor="let cat of subCategories" [header]="cat.name">
@@ -44,7 +54,7 @@
                     <div
                       class="detail_box__photo"
                       [ngStyle]="{
-                        'background-image': 'url(' + item.img + ')'
+                        'background-image': 'url(' + item.coverImage + ')'
                       }"
                     ></div>
                     <div class="detail_box__details">
@@ -56,7 +66,8 @@
                           class="add-btn flex-fill"
                           (click)="addToCart(item)"
                         >
-                          <i class="fa-solid fa-cart-shopping"></i> Add to cart
+                          <i class="fa-solid fa-cart-shopping"></i>
+                          {{ Language.addCartbtn }}
                         </div>
                       </div>
                       <div class="detail_box__name">{{ item.name }}</div>
@@ -71,7 +82,7 @@
             </div>
           </ng-container>
           <ng-container *ngIf="!catFoods || catFoods.length === 0">
-            <p>No food available in this category.</p>
+            <p>{{ Language.emptyMessage }}</p>
           </ng-container>
         </p-tabPanel>
       </p-tabView>
@@ -86,7 +97,7 @@
               <div
                 class="detail_box__photo"
                 [ngStyle]="{
-                  'background-image': 'url(' + item.img + ')'
+                  'background-image': 'url(' + item.coverImage + ')'
                 }"
               ></div>
               <div class="detail_box__details">
@@ -146,8 +157,8 @@
     </div>
 
     <!-- Order Summary -->
-    <div class="col-lg-4">
-      <div class="order-summary pt-5 mt-5">
+    <div class="col-lg-5">
+      <div class="order-summary pt-5">
         <div class="shop_card">
           <p class="title py-3 ps-3">{{ Language.ordSummary }}</p>
           <div
@@ -210,9 +221,31 @@
           </div>
           <p-divider class="p-0"></p-divider>
           <div
+            *ngIf="selectedTableId == null"
             class="w-100 order-submit d-flex justify-content-center align-items-center px-3 py-0 pb-3"
           >
-            <button class="submit-btn w-100" (click)="show()" label="Show">
+            <button
+              class="submit-btn dsb-btn w-100"
+              (click)="show()"
+              label="Show"
+              [disabled]="orders.length === 0"
+            >
+              {{ Language.frsOrderBtn }}
+            </button>
+          </div>
+          <div *ngIf="selectedTableId" class="d-flex gap-2 px-2 pb-2">
+            <button
+              class="submit-btn w-100"
+              (click)="updateOrder()"
+              label="Show"
+            >
+              {{ Language.editCart }}
+            </button>
+            <button
+              class="submit-btn w-100"
+              (click)="confirmCart()"
+              label="Show"
+            >
               {{ Language.frsOrderBtn }}
             </button>
           </div>

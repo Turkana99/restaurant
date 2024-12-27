@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 .content {
-  padding: 0px 2vw;
+  padding: 0px 6vw;
 
   @media only screen and (max-width: 1257px) {
     padding: 1rem 30px !important;
@@ -17,23 +17,12 @@
   background-color: $black-bg;
   color: white;
   font-family: "Poppins", sans-serif !important;
+
   p {
     font-size: 15px;
   }
-  .btn:nth-child(odd) {
-    background-color: $main-color;
-    font-size: 14px;
-    border: 1px solid $main-color;
-    border-radius: 3px;
-    padding: 2px 15px;
-    text-decoration: none;
-    color: white;
-    &:hover {
-      background-color: $black-bg;
-      color: $main-color !important;
-    }
-  }
-  .btn:nth-child(even) {
+
+  .btn {
     background-color: $black-bg;
     font-size: 14px;
     border: 1px solid $main-color;
@@ -45,14 +34,24 @@
       background-color: $main-color;
       color: white !important;
     }
+
+    &.selected {
+      background-color: $main-color;
+      color: white;
+      border-color: $main-color;
+    }
   }
 }
+::ng-deep .btn-check:focus+.btn, .btn:focus{
+  box-shadow: none!important;
+}
+
 @media only screen and (max-width: 991px) {
   .menu-option {
     .col-lg-8,
     .col-lg-4 {
-      width: 100%!important;
-      justify-content: center!important;
+      width: 100% !important;
+      justify-content: center !important;
     }
   }
 }
@@ -284,4 +283,20 @@
 .add-btn:hover {
   background-color: $main-color;
   color: white !important;
+}
+
+::ng-deep .ngx-spinner {
+  z-index: 9999;
+}
+
+::ng-deep .ngx-spinner .spinner {
+  border-color: $main-color transparent transparent transparent;
+}
+
+.dsb-btn:disabled {
+  background-color: #d3d3d3;  
+  color: #a9a9a9; 
+  border: 1px solid #d3d3d3;  
+  cursor: not-allowed;  
+  opacity: 0.6;  
 }
