@@ -45,7 +45,11 @@
       </div> -->
       @if(subCategories.length){
       <p-tabView (activeIndexChange)="onCategoryChange($event)">
-        <p-tabPanel *ngFor="let cat of subCategories" [header]="cat.name">
+        <p-tabPanel
+          *ngFor="let cat of subCategories"
+          [header]="cat.name"
+          [disabled]="!isEdit"
+        >
           <ng-container *ngIf="catFoods?.length != 0">
             <div class="row p-0 m-0 d-flex justify-content-between">
               <div class="col-lg-6 foods p-2 m-0" *ngFor="let item of catFoods">
@@ -160,7 +164,17 @@
     <div class="col-lg-5">
       <div class="order-summary pt-5">
         <div class="shop_card">
-          <p class="title py-3 ps-3">{{ Language.ordSummary }}</p>
+          <div class="d-flex">
+            <p class="title py-3 ps-3">{{ Language.ordSummary }}</p>
+            <button
+              class="submit-btn w-100"
+              (click)="confirmCart()"
+              label="Show"
+            >
+              {{ Language.resetCart }}
+            </button>
+          </div>
+
           <div
             class="order-list"
             style="display: grid; grid-template-columns: 1fr; gap: 1rem"
@@ -221,7 +235,7 @@
           </div>
           <p-divider class="p-0"></p-divider>
           <div
-            *ngIf="selectedTableId == null"
+            *ngIf="!cartId"
             class="w-100 order-submit d-flex justify-content-center align-items-center px-3 py-0 pb-3"
           >
             <button
@@ -233,10 +247,11 @@
               {{ Language.frsOrderBtn }}
             </button>
           </div>
-          <div *ngIf="selectedTableId" class="d-flex gap-2 px-2 pb-2">
+          <div *ngIf="cartId" class="d-flex gap-2 px-2 pb-2">
             <button
+              *ngIf="!isEdit"
               class="submit-btn w-100"
-              (click)="updateOrder()"
+              (click)="updateCart()"
               label="Show"
             >
               {{ Language.editCart }}

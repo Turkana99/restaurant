@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, skip } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environment';
 
@@ -7,12 +7,21 @@ import { environment } from '../../../environment';
   providedIn: 'root',
 })
 export class CartService {
-  private cartIdSource = new BehaviorSubject<string | null>(null);
-  cartId$ = this.cartIdSource.asObservable();
+  private cartIdSource = new BehaviorSubject<any>(null);
+  cartId$ = this.cartIdSource.asObservable().pipe(skip(1));
+
+  private orderStateSource = new BehaviorSubject<any>(null);
+  orderState$ = this.orderStateSource.asObservable().pipe(skip(1));
 
   // Set the cartId
-  setCartId(cartId: string) {
+  setCartId(cartId: string | number) {
+    sessionStorage.setItem('cartId', cartId.toString());
     this.cartIdSource.next(cartId);
+  }
+
+  setOrderState(orderState: string) {
+    sessionStorage.setItem('orderState', orderState);
+    this.orderStateSource.next(orderState);
   }
 
   // Get the current cartId

@@ -26,12 +26,7 @@ import { CartService } from '../../core/services/carts.service';
     ToastModule,
     NgxSpinnerModule,
   ],
-  providers: [
-    ConfirmationService,
-    MessageService,
-    DiningTablesService,
-    CartService,
-  ],
+  providers: [ConfirmationService, MessageService, DiningTablesService],
   templateUrl: './dining-table-list.component.html',
   styleUrls: ['./dining-table-list.component.scss'],
 })
@@ -64,10 +59,10 @@ export class DiningTableListComponent implements OnInit {
   confirmSelection() {
     if (this.selectedTable) {
       console.log('Selected Table ID:', this.selectedTable?.id);
-  
+
       // Retrieve the orders data from sessionStorage
       const ordersData = JSON.parse(sessionStorage.getItem('orders') || '[]');
-  
+
       if (this.selectedTable?.id != null && ordersData.length > 0) {
         const cartRequest = {
           tableId: this.selectedTable.id,
@@ -76,12 +71,11 @@ export class DiningTableListComponent implements OnInit {
             quantity: order.quantity,
           })),
         };
-  
+
         this.cartService.addCart(cartRequest).subscribe(
           (response) => {
             console.log('Cart created successfully', response);
-            this.cartId = response.cartId;
-  
+            this.cartService.setCartId(response.id);
             // Clear orders from sessionStorage after confirming the order
             // sessionStorage.removeItem('orders');
           },
@@ -92,13 +86,12 @@ export class DiningTableListComponent implements OnInit {
       } else {
         console.warn('No orders found in session.');
       }
-  
+
       this.ref.close(this.selectedTable);
     } else {
       console.warn('No table selected.');
     }
   }
-  
 
   getAllTables() {
     this.showSpinner = true;

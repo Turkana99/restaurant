@@ -27,6 +27,7 @@ export class LangService {
       addCartbtn:'Səbətə əlavə et',
       tableTitle:'Masanı seçin',
       editCart:' Düzəliş et',
+      resetCart:'Səbəti sıfırla',
     },
     'en-US': {
       homePage: 'Home Page',
@@ -43,6 +44,7 @@ export class LangService {
       addCartbtn:'Add to cart',
       tableTitle:'Select table',
       editCart:'Edit cart',
+      resetCart:'Reset cart',
     },
     'ru-RU': {
       homePage: 'Главная страница',
@@ -59,6 +61,7 @@ export class LangService {
       addCartbtn:'Добавить в корзину',
       tableTitle:'Выбрать таблицу',
       editCart:'Редактировать корзину',
+      resetCart:'Сбросить корзину',
     },
   };
   constructor(private http: HttpClient) {

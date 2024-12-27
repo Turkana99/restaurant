@@ -8,16 +8,18 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { DiningTableListComponent } from '../../dialogs/dining-table-list/dining-table-list.component';
-import {
-  DialogService,
-  DynamicDialogModule,
-  DynamicDialogRef,
-} from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CategoryService } from '../../core/services/categories.service';
 import { LangService } from '../../core/services/language.service';
-import { distinctUntilChanged } from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { ProductService } from '../../core/services/products.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -25,7 +27,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MessageInterceptor } from '../../core/interceptors/message-interceptor.service';
 import { LoadingInterceptor } from '../../core/interceptors/loading.interceptor';
 import { MessageService } from 'primeng/api';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CartService } from '../../core/services/carts.service';
 
 @Component({
@@ -48,7 +49,6 @@ import { CartService } from '../../core/services/carts.service';
     DialogService,
     ProductService,
     CategoryService,
-    CartService,
     { provide: HTTP_INTERCEPTORS, useClass: MessageInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     MessageService,
@@ -69,7 +69,11 @@ export class MenuComponent implements OnInit {
   showSpinner: boolean = false;
   ref: DynamicDialogRef | undefined;
   selectedTableId: number | null = null;
-  cartId: string | null = null;
+  cartId: number | null = null;
+  orderState: string = 'other';
+
+  isEdit$!: Observable<boolean>;
+  isEdit: boolean = true;
 
   constructor(
     public dialogService: DialogService,
@@ -81,6 +85,23 @@ export class MenuComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    combineLatest([this.cartService.cartId$, this.cartService.orderState$])
+      .pipe(
+        switchMap(([cartId, orderState]) => {
+          this.cartId = +cartId;
+          this.orderState = orderState;
+          const isEdit =
+            (!this.cartId && this.orderState == 'other') ||
+            (!!this.cartId && this.orderState == 'edit');
+          this.isEdit = isEdit;
+          return of(isEdit);
+        })
+      )
+      .subscribe();
+
+    this.cartService.setCartId(sessionStorage.getItem('cartId') ?? 0);
+    this.cartService.setOrderState('other');
+    // this.cartService.setOrderState(sessionStorage.getItem('orderState'));
     this.getFilteredFoods(this.selectedCategory);
     this.langService.currentLanguage$
       .pipe(distinctUntilChanged())
@@ -92,11 +113,6 @@ export class MenuComponent implements OnInit {
       this.orders = JSON.parse(savedOrders);
       console.log('Orders loaded from sessionStorage:', this.orders);
     }
-  
-    this.cartService.cartId$.subscribe((cartId) => {
-      this.cartId = cartId;
-      console.log('Received cartId:', this.cartId);
-    });
   }
 
   show() {
@@ -127,9 +143,13 @@ export class MenuComponent implements OnInit {
     });
   }
 
-  updateOrder() {}
+  updateCart() {
+    this.cartService.setOrderState('edit');
+  }
 
-  confirmCart() {}
+  confirmCart() {
+    this.cartService.setOrderState('other');
+  }
 
   fetchCategories() {
     this.categoryService.getCategoriesByLanguage().subscribe((response) => {
@@ -172,12 +192,10 @@ export class MenuComponent implements OnInit {
   }
 
   onCategoryChange(event: any) {
-    console.log('event', event);
     const categoryId = this.subCategories[event]?.id;
     this.productService.getProductsByCategory(categoryId).subscribe(
       (products) => {
         this.catFoods = products.items;
-        console.log('products', this.catFoods);
       },
       (error) => {
         console.error('Failed to fetch products:', error);
@@ -217,11 +235,10 @@ export class MenuComponent implements OnInit {
       this.orders.push({ ...item, quantity: 1, amount: item.price });
     }
     this.calculateTotal();
-  
+
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
-  
 
   decreaseQuantity(order: any) {
     if (order.quantity > 1) {
@@ -229,20 +246,19 @@ export class MenuComponent implements OnInit {
       order.amount -= order.price;
     }
     this.calculateTotal();
-  
+
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
-  
+
   increaseQuantity(order: any) {
     order.quantity++;
     order.amount += order.price;
     this.calculateTotal();
-  
+
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
-  
 
   calculateTotal() {
     this.totalAmount = this.orders.reduce(
@@ -254,11 +270,11 @@ export class MenuComponent implements OnInit {
   removeOrder(index: number) {
     this.orders.splice(index, 1);
     this.calculateTotal();
-  
+
     // Save orders to sessionStorage after removal
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
-  
+
   get Language() {
     return this.langService.getTranslate();
   }
