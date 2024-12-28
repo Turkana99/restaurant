@@ -92,10 +92,10 @@
       </p-tabView>
       } @if(subCategories.length==0){
       <div
-        class="row p-0 m-0 d-flex justify-content-between"
+        class="row p-0 m-0 d-flex justify-content-between "
         (activeIndexChange)="onCategoryChange($event)"
       >
-        <div class="col-lg-6 foods p-2 m-0" *ngFor="let item of catFoods">
+        <div class="col-lg-6 foods p-0 m-0 " *ngFor="let item of catFoods">
           <div id="detail" class="w-100 p-0 m-0">
             <div class="detail_box p-0 m-0">
               <div

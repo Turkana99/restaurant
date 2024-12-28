@@ -4,9 +4,15 @@ footer {
   background-color: $black-bg;
   color: white;
   font-family: "Poppins", sans-serif !important;
+  padding: 20px 6vw; // Padding for larger screens
+  
+  // Line separating sections
   .line {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
   }
+
+  // Navigation Items Styling
   .nav-item {
     a {
       color: white;
@@ -16,16 +22,71 @@ footer {
         transition: color 200ms;
       }
     }
+
+    // Styling for all-nav class
     .all-nav {
-      .nav-link  .nav-item{
+      .nav-link .nav-item {
         color: white;
       }
     }
   }
+
+  // Copyright Styling
   .copyright {
     font-size: 14px;
+    margin-top: 15px;
+
     span {
       color: $main-color !important;
+    }
+  }
+
+  // Media Query for Tablet and Mobile Screens (<= 991px)
+  @media only screen and (max-width: 991px) {
+    padding: 20px 4vw;
+
+    .nav-item {
+      a {
+        font-size: 12px;
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+    }
+  }
+
+  // Media Query for Mobile Screens (<= 768px)
+  @media only screen and (max-width: 768px) {
+    padding: 20px 10px; // Reduce padding for small screens
+
+    .nav-item {
+      margin-bottom: 10px; // Space between nav items on mobile
+      a {
+        font-size: 12px;
+        display: block; // Stack nav items vertically
+        margin-bottom: 5px;
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      text-align: center;
+    }
+  }
+
+  // Media Query for Extra Small Screens (<= 480px)
+  @media only screen and (max-width: 480px) {
+    padding: 15px 5px;
+
+    .nav-item {
+      a {
+        font-size: 11px;
+      }
+    }
+
+    .copyright {
+      font-size: 11px;
     }
   }
 }

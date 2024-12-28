@@ -184,6 +184,8 @@ export class MenuComponent implements OnInit {
   fetchCategories() {
     this.categoryService.getCategoriesByLanguage().subscribe((response) => {
       const sortedResponse = response.sort((a: any, b: any) => b.id - a.id);
+  
+      // Filter for top-level categories
       this.categories = sortedResponse.filter(
         (category: any) => category.ownerId === null
       );
@@ -197,45 +199,85 @@ export class MenuComponent implements OnInit {
         if (categoryWithChildren) {
           // Initialize with the first child of the first category that has children
           const firstChild = categoryWithChildren.children[0];
-          console.log("firstChild",firstChild);
-          this.openMenu(firstChild.id);
+          console.log("First child:", firstChild);
+          this.openMenu(categoryWithChildren.id);
         } else {
           // Fallback if no category has children
           const firstCategory = this.categories[0];
-          this.openMenu(firstCategory.id);
+          console.log("First category without children:", firstCategory);
+          this.openMenu(firstCategory.id); // Pass only the categoryId
         }
+      } else {
+        console.warn("No categories available.");
       }
     });
   }
-
+  
   openMenu(categoryId: any) {
+    console.log("Opening menu for category:", categoryId);
+  
     this.selectedCategoryId = categoryId;
+  
+    // Find the selected category
     const selectedCategory = this.categories.find((x) => x.id === categoryId);
+  
     if (selectedCategory) {
       this.subCategories = selectedCategory.children;
+  
+      let subcategoryId = null;
+  
+      // If the category has children, use the first child's ID
+      if (this.subCategories && this.subCategories.length > 0) {
+        console.log("this.subCategories[0]",this.subCategories.id);
+        
+        subcategoryId = this.subCategories[0].id;
+      }
+  
       this.showSpinner = true;
       this.spinner.show();
-      this.productService.getProductsByCategory(categoryId).subscribe(
+     if(subcategoryId!=null){
+      this.productService.getProductsByCategory(subcategoryId).subscribe(
         (products) => {
-          console.log("products", products);
-          
+          console.log("Products:", products);
+  
           this.catFoods = products.items;
           this.spinner.hide();
           this.showSpinner = false;
-          console.log('Products for the category:', this.catFoods);
+  
+          console.log("Products for subcategory:", this.catFoods);
         },
         (error) => {
-          console.error('Failed to fetch products for the category:', error);
+          console.error("Failed to fetch products for subcategory:", error);
           this.catFoods = [];
           this.spinner.hide(); // Hide spinner after error
         }
       );
+     }else{
+      this.productService.getProductsByCategory(selectedCategory.id).subscribe(
+        (products) => {
+          console.log("Products:", products);
+  
+          this.catFoods = products.items;
+          this.spinner.hide();
+          this.showSpinner = false;
+  
+          console.log("Products for subcategory:", this.catFoods);
+        },
+        (error) => {
+          console.error("Failed to fetch products for subcategory:", error);
+          this.catFoods = [];
+          this.spinner.hide(); // Hide spinner after error
+        }
+      );
+     }
+ 
     } else {
-      console.error('Category not found for id:', categoryId);
+      console.error("Category not found for id:", categoryId);
       this.spinner.hide(); // Hide spinner if category is not found
     }
   }
-
+  
+  
   onCategoryChange(event: any) {
     const categoryId = this.subCategories[event]?.id;
     this.productService.getProductsByCategory(categoryId).subscribe(
@@ -312,15 +354,16 @@ export class MenuComponent implements OnInit {
 
   calculateTotal() {
     this.totalAmount = this.orders.reduce(
-      (sum, order) => sum + order.amount,
+      (sum, order) => sum,
       0
     );
     sessionStorage.setItem('totalAmount', this.totalAmount.toString());
   }
+  
   updateTotalAmount() {
     // Example: Calculate total amount from the orders
     this.totalAmount = this.orders.reduce(
-      (sum, order) => sum + order.quantity * order.amount,
+      (sum, order) => sum + order.amount,
       0
     );
     // Save to sessionStorage
