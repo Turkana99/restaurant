@@ -166,17 +166,44 @@ export class MenuComponent implements OnInit {
   //   this.cartService.setOrderState('other');
   // }
 
+  // fetchCategories() {
+  //   this.categoryService.getCategoriesByLanguage().subscribe((response) => {
+  //     const sortedResponse = response.sort((a: any, b: any) => b.id - a.id);
+  //     this.categories = sortedResponse.filter(
+  //       (category: any) => category.ownerId === null
+  //     );
+
+  //     if (this.categories.length > 0) {
+  //       // Initialize the first category
+  //       const firstCategory = this.categories[0];
+  //       this.openMenu(firstCategory.id);
+  //     }
+  //   });
+  // }
+
   fetchCategories() {
     this.categoryService.getCategoriesByLanguage().subscribe((response) => {
       const sortedResponse = response.sort((a: any, b: any) => b.id - a.id);
       this.categories = sortedResponse.filter(
         (category: any) => category.ownerId === null
       );
-
+  
       if (this.categories.length > 0) {
-        // Initialize the first category
-        const firstCategory = this.categories[0];
-        this.openMenu(firstCategory.id);
+        // Find the first category with children
+        const categoryWithChildren = this.categories.find(
+          (category: any) => category.children && category.children.length > 0
+        );
+  
+        if (categoryWithChildren) {
+          // Initialize with the first child of the first category that has children
+          const firstChild = categoryWithChildren.children[0];
+          console.log("firstChild",firstChild);
+          this.openMenu(firstChild.id);
+        } else {
+          // Fallback if no category has children
+          const firstCategory = this.categories[0];
+          this.openMenu(firstCategory.id);
+        }
       }
     });
   }
@@ -190,6 +217,8 @@ export class MenuComponent implements OnInit {
       this.spinner.show();
       this.productService.getProductsByCategory(categoryId).subscribe(
         (products) => {
+          console.log("products", products);
+          
           this.catFoods = products.items;
           this.spinner.hide();
           this.showSpinner = false;
