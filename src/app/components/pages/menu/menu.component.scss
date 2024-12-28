@@ -157,6 +157,24 @@
 #detail .detail_box__details {
   padding: 30px 20px;
   position: relative;
+};
+@media only screen and (max-width: 1024px) and (min-width: 850px) {
+  .detail_box__details {
+    padding: 0px !important;
+  }
+
+  .detail_box__name {
+    padding: 8px !important;
+    text-align: center;
+  }
+
+  .detail_box__badges {
+    padding-left: 20px;
+  }
+
+  .detail_box__info {
+    padding: 0px 20px;
+  }
 }
 
 #detail .detail_box__badges {
@@ -311,3 +329,10 @@
   color: white !important;
   border-color: $main-color !important;
 }
+
+
+
+
+
+
+

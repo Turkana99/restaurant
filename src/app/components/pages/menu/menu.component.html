@@ -62,21 +62,28 @@
                       }"
                     ></div>
                     <div class="detail_box__details">
-                      <div class="detail_box__badges d-flex gap-2">
-                        <div class="amount flex-fill d-flex align-items-center">
-                          {{ item.price }} AZN
-                        </div>
+                      <div class="pb-4 h-100">
+                        <div class="detail_box__name">{{ item.name }}</div>
                         <div
-                          class="add-btn flex-fill"
-                          (click)="addToCart(item)"
+                          class="detail_box__badges d-flex align-items-center justify-content-start gap-2 pt-2"
                         >
-                          <i class="fa-solid fa-cart-shopping"></i>
-                          {{ Language.addCartbtn }}
+                          <div
+                            class="amount flex-fill d-flex align-items-center"
+                          >
+                            {{ item.price }} AZN
+                          </div>
+                          <div
+                            class="add-btn flex-fill"
+                            (click)="addToCart(item)"
+                          >
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            {{ Language.addCartbtn }}
+                          </div>
                         </div>
                       </div>
-                      <div class="detail_box__name">{{ item.name }}</div>
+
                       <p-divider></p-divider>
-                      <div class="detail_box__info">
+                      <div class="detail_box__info py-0 m-0">
                         <span>{{ item.description }}</span>
                       </div>
                     </div>
@@ -92,10 +99,10 @@
       </p-tabView>
       } @if(subCategories.length==0){
       <div
-        class="row p-0 m-0 d-flex justify-content-between "
+        class="row p-0 m-0 d-flex justify-content-between"
         (activeIndexChange)="onCategoryChange($event)"
       >
-        <div class="col-lg-6 foods p-0 m-0 " *ngFor="let item of catFoods">
+        <div class="col-lg-6 foods p-0 m-0" *ngFor="let item of catFoods">
           <div id="detail" class="w-100 p-0 m-0">
             <div class="detail_box p-0 m-0">
               <div
