@@ -28,7 +28,8 @@ import { MessageInterceptor } from '../../core/interceptors/message-interceptor.
 import { LoadingInterceptor } from '../../core/interceptors/loading.interceptor';
 import { MessageService } from 'primeng/api';
 import { CartService } from '../../core/services/carts.service';
-
+import { OrderService } from '../../core/services/orders.service';
+import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -44,11 +45,13 @@ import { CartService } from '../../core/services/carts.service';
     InputTextModule,
     MatDialogModule,
     NgxSpinnerModule,
+    ToastModule,
   ],
   providers: [
     DialogService,
     ProductService,
     CategoryService,
+    OrderService,
     { provide: HTTP_INTERCEPTORS, useClass: MessageInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     MessageService,
@@ -71,9 +74,9 @@ export class MenuComponent implements OnInit {
   selectedTableId: number | null = null;
   cartId: number | null = null;
   orderState: string = 'other';
-
   isEdit$!: Observable<boolean>;
   isEdit: boolean = true;
+  hasEdit: boolean = false;
 
   constructor(
     public dialogService: DialogService,
@@ -81,14 +84,25 @@ export class MenuComponent implements OnInit {
     private categoryService: CategoryService,
     private productService: ProductService,
     private cartService: CartService,
+    private orderService: OrderService,
+    private messageService: MessageService,
     private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
+    // Retrieve totalAmount from sessionStorage, or initialize to 0 if not set
+    const savedTotal = sessionStorage.getItem('totalAmount');
+    this.totalAmount = savedTotal ? parseFloat(savedTotal) : 0;
+
+    // Existing initialization logic
+    console.log('caartId', this.cartId);
+
     combineLatest([this.cartService.cartId$, this.cartService.orderState$])
       .pipe(
         switchMap(([cartId, orderState]) => {
+          console.log('cartId:', cartId);
           this.cartId = +cartId;
+          console.log(' this.cartId:', this.cartId);
           this.orderState = orderState;
           const isEdit =
             (!this.cartId && this.orderState == 'other') ||
@@ -101,13 +115,14 @@ export class MenuComponent implements OnInit {
 
     this.cartService.setCartId(sessionStorage.getItem('cartId') ?? 0);
     this.cartService.setOrderState('other');
-    // this.cartService.setOrderState(sessionStorage.getItem('orderState'));
+
     this.getFilteredFoods(this.selectedCategory);
     this.langService.currentLanguage$
       .pipe(distinctUntilChanged())
       .subscribe(() => {
         this.fetchCategories();
       });
+
     const savedOrders = sessionStorage.getItem('orders');
     if (savedOrders) {
       this.orders = JSON.parse(savedOrders);
@@ -147,9 +162,9 @@ export class MenuComponent implements OnInit {
     this.cartService.setOrderState('edit');
   }
 
-  confirmCart() {
-    this.cartService.setOrderState('other');
-  }
+  // confirmCart() {
+  //   this.cartService.setOrderState('other');
+  // }
 
   fetchCategories() {
     this.categoryService.getCategoriesByLanguage().subscribe((response) => {
@@ -167,6 +182,7 @@ export class MenuComponent implements OnInit {
   }
 
   openMenu(categoryId: any) {
+    this.selectedCategoryId = categoryId;
     const selectedCategory = this.categories.find((x) => x.id === categoryId);
     if (selectedCategory) {
       this.subCategories = selectedCategory.children;
@@ -235,7 +251,8 @@ export class MenuComponent implements OnInit {
       this.orders.push({ ...item, quantity: 1, amount: item.price });
     }
     this.calculateTotal();
-
+    this.hasEdit = true;
+    this.updateTotalAmount();
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
@@ -245,7 +262,9 @@ export class MenuComponent implements OnInit {
       order.quantity--;
       order.amount -= order.price;
     }
+    this.hasEdit = true;
     this.calculateTotal();
+    this.updateTotalAmount();
 
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
@@ -254,7 +273,9 @@ export class MenuComponent implements OnInit {
   increaseQuantity(order: any) {
     order.quantity++;
     order.amount += order.price;
+    this.hasEdit = true;
     this.calculateTotal();
+    this.updateTotalAmount();
 
     // Save orders to sessionStorage
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
@@ -265,17 +286,126 @@ export class MenuComponent implements OnInit {
       (sum, order) => sum + order.amount,
       0
     );
+    sessionStorage.setItem('totalAmount', this.totalAmount.toString());
+  }
+  updateTotalAmount() {
+    // Example: Calculate total amount from the orders
+    this.totalAmount = this.orders.reduce(
+      (sum, order) => sum + order.quantity * order.amount,
+      0
+    );
+    // Save to sessionStorage
+    sessionStorage.setItem('totalAmount', this.totalAmount.toString());
   }
 
   removeOrder(index: number) {
     this.orders.splice(index, 1);
     this.calculateTotal();
-
+    this.hasEdit = true;
+    this.updateTotalAmount();
     // Save orders to sessionStorage after removal
     sessionStorage.setItem('orders', JSON.stringify(this.orders));
   }
 
   get Language() {
     return this.langService.getTranslate();
+  }
+
+  resetCart() {
+    this.cartService.deleteCart(this.cartId).subscribe(
+      (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Uğurlu',
+          detail: 'Səbətiniz uğurla sıfırlandı !',
+          life: 2000,
+        });
+        sessionStorage.removeItem('orders');
+        sessionStorage.removeItem('cartId');
+        sessionStorage.removeItem('orderState');
+        sessionStorage.removeItem('totalAmount');
+        location.reload();
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Xəbərdarlıq',
+          detail:
+            error?.error?.error?.errors?.join('\n') ||
+            this.Language.errorMessage,
+          life: 2000,
+        });
+      }
+    );
+  }
+
+  confirmCart() {
+    if (this.hasEdit) {
+      let req: any = {
+        cartItems: this.orders.map((order: any) => ({
+          productId: order.id,
+          quantity: order.quantity,
+        })),
+      };
+      if (this.cartId) {
+        req.id = this.cartId;
+        this.cartService.editCart(req).subscribe(
+          (response) => {
+            this.cartService.setOrderState('other');
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Uğurlu',
+              detail: 'Uğurla yeniləndi!',
+              life: 2000,
+            });
+          },
+          (error) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Xəbərdarlıq',
+              detail:
+                error?.error?.error?.errors?.join('\n') ||
+                'Yenilənmə uğursuz oldu!',
+              life: 2000,
+            });
+          }
+        );
+        return;
+      }
+    } else {
+      this.cartService.setOrderState('other');
+    }
+  }
+
+  createOrder() {
+    const ordRequest = {
+      cartId: this.cartId,
+    };
+
+    this.orderService.addOrder(ordRequest).subscribe(
+      (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Uğurlu',
+          detail: 'Sifariş uğurla yaraddıldı!',
+          life: 2000,
+        });
+        sessionStorage.removeItem('orders');
+        sessionStorage.removeItem('cartId');
+        sessionStorage.removeItem('orderState');
+        sessionStorage.removeItem('totalAmount');
+        location.reload();
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Xəbərdarlıq',
+          detail:
+            error?.error?.error?.errors?.join('\n') ||
+            'Əməliyyat uğursuz oldu!',
+          life: 2000,
+        });
+      }
+    );
   }
 }

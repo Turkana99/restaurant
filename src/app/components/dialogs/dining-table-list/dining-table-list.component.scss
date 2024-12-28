@@ -27,20 +27,36 @@
     border: none;
     background-color: $main-color;
     color: white;
-    font-family: "Poppins", sans-serif !important;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
     padding: 9px 35px;
     border-radius: 5px;
     cursor: pointer;
+
+    &:disabled {
+      background-color: #d3d3d3 !important;
+      color: #a9a9a9 !important;
+      border: 1px solid #d3d3d3 !important;
+      cursor: not-allowed !important;
+      opacity: 0.6 !important;
+    }
   }
 }
+
+::ng-deep .submit-btn:disabled {
+  background-color: #d3d3d3 !important;
+  color: #a9a9a9 !important;
+  border: 1px solid #d3d3d3 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
 
 ::ng-deep .p-dialog-title {
   font-size: 22px;
   font-family: "Poppins", sans-serif !important;
 }
-
 
 ::ng-deep .ngx-spinner {
   z-index: 9999;

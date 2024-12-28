@@ -17,11 +17,9 @@
   background-color: $black-bg;
   color: white;
   font-family: "Poppins", sans-serif !important;
-
   p {
     font-size: 15px;
   }
-
   .btn {
     background-color: $black-bg;
     font-size: 14px;
@@ -30,20 +28,23 @@
     padding: 2px 15px;
     text-decoration: none;
     color: $main-color;
+
     &:hover {
       background-color: $main-color;
-      color: white !important;
+      color: white;
     }
 
     &.selected {
-      background-color: $main-color;
-      color: white;
-      border-color: $main-color;
+      background-color: $main-color !important;
+      color: white !important;
+      border-color: $main-color !important;
     }
   }
 }
-::ng-deep .btn-check:focus+.btn, .btn:focus{
-  box-shadow: none!important;
+
+::ng-deep .btn-check:focus + .btn,
+.btn:focus {
+  box-shadow: none !important;
 }
 
 @media only screen and (max-width: 991px) {
@@ -60,12 +61,23 @@
   .shop_card {
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    p {
+    .title {
       background-color: $black-bg;
-      color: white;
-      font-family: "Poppins", sans-serif !important;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+      p {
+        color: white;
+        font-family: "Poppins", sans-serif !important;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      .reset-btn {
+        background-color: $main-color;
+        font-family: "Poppins", sans-serif !important;
+        border-radius: 5px;
+        color: white;
+        border: none;
+        height: 50%;
+        font-size: 14px;
+      }
     }
     .shop_icon {
       background-color: #f2f2f2;
@@ -294,9 +306,15 @@
 }
 
 .dsb-btn:disabled {
-  background-color: #d3d3d3;  
-  color: #a9a9a9; 
-  border: 1px solid #d3d3d3;  
-  cursor: not-allowed;  
-  opacity: 0.6;  
+  background-color: #d3d3d3;
+  color: #a9a9a9;
+  border: 1px solid #d3d3d3;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+::ng-deep .btn.selected {
+  background-color: $main-color !important;
+  color: white !important;
+  border-color: $main-color !important;
 }

@@ -7,7 +7,8 @@ import {
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 import { LanguageInterceptor } from './app/components/core/services/language.interceptor';
-
+import { enableProdMode } from '@angular/core';
+enableProdMode();
 bootstrapApplication(AppComponent, {
   ...appConfig,
   providers: [

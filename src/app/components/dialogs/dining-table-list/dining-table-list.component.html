@@ -25,7 +25,13 @@
     <button
       class="submit-btn w-100"
       (click)="confirmSelection()"
-      [disabled]="!selectTable"
+      [disabled]="!selectedTable"
+      style="
+        background-color: #f25c04;
+        color: white;
+        border: 1px solid #f25c04;
+        cursor: pointer;
+      "
     >
       Təsdiqlə
     </button>

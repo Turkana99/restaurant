@@ -40,4 +40,9 @@ export class CartService {
   editCart(request: any): Observable<any> {
     return this.http.put<any>(environment.getCartsUrl, request);
   }
+  deleteCart(id: any) {
+    return this.http.delete<any>(`${environment.getCartsUrl}/${id}`, {
+      observe: 'response',
+    });
+  }
 }
