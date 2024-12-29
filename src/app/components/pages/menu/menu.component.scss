@@ -121,7 +121,35 @@
 
 @media only screen and (max-width: 600px) {
   #detail .detail_box {
-    height: 480px; /* Increase height on smaller screens */
+    height: 380px;
+  }
+}
+
+@media only screen and (max-width: 427px){
+  .detail_box__details {
+    padding: 0px !important;
+  }
+
+  .detail_box__name {
+    width: 100%;
+    text-align: center;
+    padding-top: 7px !important;
+    padding-right: 0px !important;
+    text-align: center;
+  }
+  .detail_box__badges {
+    width: 100%;
+    right: 0px !important;
+    justify-content: center !important;
+  }
+
+  .box-title {
+    justify-content: center;
+    padding-bottom: 27px !important;
+  }
+
+  .detail_box__info {
+    padding: 0px 20px;
   }
 }
 
@@ -135,11 +163,11 @@
   transform: scale(1);
 }
 
-@media only screen and (max-width: 600px) {
-  #detail .detail_box__photo {
-    height: 220px; /* Adjust image height for mobile */
-  }
-}
+// @media only screen and (max-width: 600px) {
+//   #detail .detail_box__photo {
+//     height: 220px; /* Adjust image height for mobile */
+//   }
+// }
 
 #detail .detail_box__photo:after {
   transition: 0.5s ease-in-out;
@@ -157,19 +185,28 @@
 #detail .detail_box__details {
   padding: 30px 20px;
   position: relative;
-};
-@media only screen and (max-width: 1024px) and (min-width: 850px) {
+}
+@media only screen and (max-width: 1470px) and (min-width: 850px) {
   .detail_box__details {
     padding: 0px !important;
   }
 
   .detail_box__name {
-    padding: 8px !important;
+    width: 100%;
+    text-align: center;
+    padding-top: 7px !important;
+    padding-right: 0px !important;
     text-align: center;
   }
-
   .detail_box__badges {
-    padding-left: 20px;
+    width: 100%;
+    right: 0px !important;
+    justify-content: center !important;
+  }
+
+  .box-title {
+    justify-content: center;
+    padding-bottom: 22px !important;
   }
 
   .detail_box__info {
@@ -221,13 +258,13 @@
   line-height: 22px;
 }
 
-#detail .detail_box__info span:first-of-type {
-  margin-top: 30px;
-}
+// #detail .detail_box__info span:first-of-type {
+//   margin-top: 30px;
+// }
 
-#detail .detail_box__info span:last-of-type {
-  margin-bottom: 35px;
-}
+// #detail .detail_box__info span:last-of-type {
+//   margin-bottom: 35px;
+// }
 
 #detail .detail_box__overlay {
   visibility: hidden;
@@ -286,6 +323,7 @@
 
 .amount {
   color: white;
+  border: 1px solid $main-color;
   background-color: $main-color;
   padding: 3px 10px;
   border-radius: 3px;
@@ -295,6 +333,7 @@
 }
 .add-btn {
   border: 1px solid $main-color;
+  background-color: transparent;
   color: $main-color;
   padding: 3px 10px;
   border-radius: 3px;
@@ -329,10 +368,4 @@
   color: white !important;
   border-color: $main-color !important;
 }
-
-
-
-
-
-
 

@@ -62,23 +62,18 @@
                       }"
                     ></div>
                     <div class="detail_box__details">
-                      <div class="pb-4 h-100">
+                      <div
+                        class="box-title pb-2 h-100 d-flex align-items-center"
+                      >
                         <div class="detail_box__name">{{ item.name }}</div>
                         <div
-                          class="detail_box__badges d-flex align-items-center justify-content-start gap-2 pt-2"
+                          class="detail_box__badges d-flex align-items-center justify-content-start gap-2"
                         >
-                          <div
-                            class="amount flex-fill d-flex align-items-center"
-                          >
-                            {{ item.price }} AZN
-                          </div>
-                          <div
-                            class="add-btn flex-fill"
-                            (click)="addToCart(item)"
-                          >
+                          <button class="amount">{{ item.price }} AZN</button>
+                          <button class="add-btn" (click)="addToCart(item)">
                             <i class="fa-solid fa-cart-shopping"></i>
                             {{ Language.addCartbtn }}
-                          </div>
+                          </button>
                         </div>
                       </div>
 

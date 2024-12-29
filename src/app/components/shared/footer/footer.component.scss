@@ -5,7 +5,7 @@ footer {
   color: white;
   font-family: "Poppins", sans-serif !important;
   padding: 20px 6vw; // Padding for larger screens
-  
+
   // Line separating sections
   .line {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -88,5 +88,11 @@ footer {
     .copyright {
       font-size: 11px;
     }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .nav {
+    gap: 0px !important;
   }
 }
