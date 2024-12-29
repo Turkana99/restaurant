@@ -1,6 +1,8 @@
 @import "../../styles/variables.scss";
 
 .dining-tables-list {
+  height: 500px;
+  overflow-y: auto;
   .dining-tables-btn {
     background-color: white;
     border: 1.5px solid rgba(0, 0, 0, 0.1);
@@ -64,4 +66,8 @@
 
 ::ng-deep .ngx-spinner .spinner {
   border-color: $main-color transparent transparent transparent;
+}
+.btn{
+  position: fixed;
+  bottom: 0;
 }

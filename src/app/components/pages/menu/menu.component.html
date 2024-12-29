@@ -63,11 +63,11 @@
                     ></div>
                     <div class="detail_box__details">
                       <div
-                        class="box-title pb-2 h-100 d-flex align-items-center"
+                        class="box-title pb-2 h-100 d-flex align-items-center justify-content-between"
                       >
-                        <div class="detail_box__name">{{ item.name }}</div>
+                        <div class="detail_box__name flex-fill p-0"><p>{{ item.name }}</p></div>
                         <div
-                          class="detail_box__badges d-flex align-items-center justify-content-start gap-2"
+                          class="detail_box__badges flex-fill d-flex align-items-center justify-content-end gap-2"
                         >
                           <button class="amount">{{ item.price }} AZN</button>
                           <button class="add-btn" (click)="addToCart(item)">

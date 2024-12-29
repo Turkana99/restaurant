@@ -183,7 +183,7 @@
 }
 
 #detail .detail_box__details {
-  padding: 30px 20px;
+  padding: 30px 15px;
   position: relative;
 }
 @media only screen and (max-width: 1470px) and (min-width: 850px) {
@@ -239,7 +239,7 @@
 }
 
 #detail .detail_box__name {
-  font-size: 16px;
+  font-size: 14px!important;
   color: $title-color;
   font-weight: 600;
   width: 100%;
