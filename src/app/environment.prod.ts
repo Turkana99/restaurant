@@ -1,4 +1,4 @@
-const apiUrl = 'http://188.245.226.20:8080/api/v1';
+const apiUrl = 'https://api.lezizrestoran.az/api/v1';
 
 export const environment = {
   production: true,
