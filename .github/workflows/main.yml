@@ -59,7 +59,7 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh root@188.245.226.20 "cd /opt/leziz && docker-compose up -d --force-recreate leziz.front" || (echo "Docker-compose up failed" && exit 1)
+          ssh root@188.245.226.20 "cd /opt/leziz && docker-compose up -d --force-recreate leziz.front && docker-compose exec nginx nginx -s reload" || (echo "Docker-compose up failed" && exit 1)
           ssh root@188.245.226.20 "docker container prune -f" || (echo "Docker container prune failed" && exit 1)
           ssh root@188.245.226.20 "docker image prune -f" || (echo "Docker image prune failed" && exit 1)
         env:
